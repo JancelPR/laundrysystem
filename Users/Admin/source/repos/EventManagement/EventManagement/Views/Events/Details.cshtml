@@ -1,0 +1,93 @@
+﻿@model EventManagement.Models.Events
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="container mt-5">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5" style="color: #092635;">Event Details</h1>
+        <p class="text-muted">Below is the information of the selected event.</p>
+    </div>
+
+    <!-- Details Card -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <!-- Card Header -->
+                <div class="card-header" style="background-color: #1B4242; color: #FFFFFF;">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Event Information</h5>
+                </div>
+
+                <!-- Table Body -->
+                <div class="card-body p-0" style="background-color: #F9F9F9;">
+                    <table class="table table-bordered mb-0">
+                        <tbody>
+                            <tr style="background-color: #E9F1F1;">
+                                <th style="width: 35%; color: #092635;"><i class="fas fa-tag"></i> Event Name</th>
+                                <td>@Model.EventName</td>
+                            </tr>
+                            <tr>
+                                <th style="color: #092635;"><i class="fas fa-info-circle"></i> Description</th>
+                                <td>@Model.Description</td>
+                            </tr>
+                            <tr style="background-color: #E9F1F1;">
+                                <th style="color: #092635;"><i class="fas fa-map-marker-alt"></i> Location</th>
+                                <td>@Model.Location</td>
+                            </tr>
+                            <tr>
+                                <th style="color: #092635;"><i class="fas fa-calendar-day"></i> Date</th>
+                                <td>@Model.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                            </tr>
+                            <tr style="background-color: #E9F1F1;">
+                                <th style="color: #092635;"><i class="fas fa-folder"></i> Category</th>
+                                <td>@Model.Category</td>
+                            </tr>
+                            <tr>
+                                <th style="color: #092635;"><i class="fas fa-users"></i> Attendee Count</th>
+                                <td>@Model.AttendeeCount</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="card-footer text-center" style="background-color: #F9F9F9;">
+                    <a asp-action="Dashboard" class="btn me-2" style="background-color: #444444; color: #FFFFFF;">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn me-2" style="background-color: #1B4242; color: #FFFFFF;">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <button type="button" id="deleteEventButton" class="btn me-2" style="background-color: #BE3144; color: #FFFFFF;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById("deleteEventButton").addEventListener("click", function () {
+            Swal.fire({
+                title: 'Delete Event?',
+                text: "This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#BE3144',
+                cancelButtonColor: '#1B4242',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '@Url.Action("Delete", "Events", new { id = Model?.Id })';
+                }
+            });
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}

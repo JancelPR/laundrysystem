@@ -1,0 +1,126 @@
+@model IEnumerable<EventManagement.Models.Events>
+
+@{
+	ViewData["Title"] = "Index";
+}
+<style>
+	.rotate-icon {
+		transition: transform 0.3s ease;
+		display: inline-block; /* <-- This is the missing piece */
+	}
+
+	.rotate-asc {
+		transform: rotate(0deg);
+	}
+
+	.rotate-desc {
+		transform: rotate(180deg);
+	}
+
+</style>
+<a class="btn btn-primary mb-4" asp-action="MonthlyReport" title="MonthlyReport">Back To Montly Report</a>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<h1 class="mb-4">Monthly Details</h1>
+	<div class="d-flex gap-2">
+		<select class="form-select" onchange="sortTable(parseInt(this.value))">
+			<option selected disabled>Sort By: ASC</option>
+			<option value="0">Event Name</option>
+			<option value="1">Description</option>
+			<option value="2">Location</option>
+			<option value="3">Date</option>
+			<option value="4">Category</option>
+			<option value="5">AttendeeCount</option>
+		</select>
+		<input class="form-control" type="search" id="inputSearch" placeholder="Search..." oninput="filterTable()" />
+	</div>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-striped table-hover align-middle" id="eventsTable">
+		<thead>
+			<tr style="background: linear-gradient(to right, #8e2de2, #ff6ec4); color: white;">
+				<th onclick="toggleSort(0)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.EventName)
+				</th>
+				<th onclick="toggleSort(1)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.Description)
+				</th>
+				<th onclick="toggleSort(2)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.Location)
+				</th>
+				<th onclick="toggleSort(3)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.Date)
+				</th>
+				<th onclick="toggleSort(4)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.Category)
+				</th>
+				<th onclick="toggleSort(5)" style="cursor:pointer;">
+					@Html.DisplayNameFor(model => model.AttendeeCount)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(modelItem => item.EventName)</td>
+					<td>@Html.DisplayFor(modelItem => item.Description)</td>
+					<td>@Html.DisplayFor(modelItem => item.Location)</td>
+					<td data-date="@item.Date.ToString("yyyy-MM-dd")">@item.Date.ToString("MMM dd, yyyy")</td>
+					<td>@Html.DisplayFor(modelItem => item.Category)</td>
+					<td>@Html.DisplayFor(modelItem => item.AttendeeCount)</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<script>
+	let sortDirections = Array(6).fill(true); // true = ascending
+
+	function toggleSort(colIndex) {
+		const ascending = sortDirections[colIndex];
+		sortTable(colIndex, ascending);
+		updateArrowRotation(colIndex, ascending);
+		sortDirections[colIndex] = !ascending;
+	}
+
+	function sortTable(colIndex, ascending = true) {
+		const table = document.getElementById("eventsTable");
+		const tbody = table.tBodies[0];
+		const rows = Array.from(tbody.rows);
+
+		rows.sort((a, b) => {
+			const valA = a.cells[colIndex].textContent.trim().toLowerCase();
+			const valB = b.cells[colIndex].textContent.trim().toLowerCase();
+
+			if (!isNaN(valA) && !isNaN(valB)) {
+				return ascending ? valA - valB : valB - valA;
+			}
+			return ascending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+		});
+
+		tbody.append(...rows);
+	}
+
+	function updateArrowRotation(activeIndex, ascending) {
+		document.querySelectorAll(".rotate-icon").forEach(icon => {
+			icon.classList.remove("rotate-asc", "rotate-desc");
+		});
+		const icon = document.getElementById("arrow-" + activeIndex);
+		if (icon) {
+			icon.classList.add(ascending ? "rotate-asc" : "rotate-desc");
+		}
+	}
+
+	function filterTable() {
+		const input = document.getElementById("inputSearch").value.toLowerCase();
+		const table = document.getElementById("eventsTable");
+		const rows = table.tBodies[0].rows;
+
+		for (let row of rows) {
+			const text = row.innerText.toLowerCase();
+			row.style.display = text.includes(input) ? "" : "none";
+		}
+	}
+</script>
