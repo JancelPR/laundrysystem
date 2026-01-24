@@ -17,7 +17,31 @@ import {
   Edit2,
   Check,
   X,
+  Loader,
+  Coffee,
+  GlassWater,
+  Sparkles,
+  UtensilsCrossed,
+  Candy,
+  Cookie,
+  Bath,
+  Beef,
+  Fish,
+  Apple,
+  Carrot,
+  Wheat,
+  Egg,
+  IceCream,
+  Soup,
+  Beer,
+  Baby,
+  Dog,
+  Cat,
+  Scroll,
+  Tag,
+  Package,
 } from "lucide-react";
+import { api } from "../../services/api";
 
 interface SettingsProps {
   categories: string[];
@@ -33,13 +57,17 @@ const Settings: React.FC<SettingsProps> = ({
   setProducts,
 }) => {
   const [activeSetting, setActiveSetting] = useState<
-    "profile-list" | "email-form" | "password-form" | "category-list"
+    | "profile-list"
+    | "email-form"
+    | "password-form"
+    | "category-list"
+    | "otp-verify"
   >("profile-list");
- 
+
   // Auth States
   const [currentEmail, setCurrentEmail] = useStickyState(
     "admin@store.com",
-    "admin_email"
+    "admin_email",
   );
   const [newEmail, setNewEmail] = useState("");
   const [emailChangePassword, setEmailChangePassword] = useState("");
@@ -49,15 +77,202 @@ const Settings: React.FC<SettingsProps> = ({
   const [settingsError, setSettingsError] = useState("");
   const [settingsSuccess, setSettingsSuccess] = useState("");
 
+  // OTP States
+  const [otpCode, setOtpCode] = useState("");
+  const [isSendingOTP, setIsSendingOTP] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [otpType, setOtpType] = useState<"email" | "password">("email");
+  const [otpTargetEmail, setOtpTargetEmail] = useState("");
+  const [pendingUpdate, setPendingUpdate] = useState<any>(null);
+
   // Category States
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const [editCategoryValue, setEditCategoryValue] = useState("");
 
+  const getCategoryIcon = (cat: string) => {
+    const iconSize = 14;
+    const lowerCat = cat.toLowerCase();
+
+    // 1. Exact Matches
+    if (cat === "All") return <LayoutGrid size={iconSize} />;
+    if (cat === "Snacks") return <Coffee size={iconSize} />;
+    if (cat === "Drinks") return <GlassWater size={iconSize} />;
+    if (cat === "Toiletries") return <Sparkles size={iconSize} />;
+    if (cat === "Canned Goods") return <UtensilsCrossed size={iconSize} />;
+
+    // 2. Keyword Matches
+    if (
+      lowerCat.includes("drink") ||
+      lowerCat.includes("water") ||
+      lowerCat.includes("soda")
+    )
+      return <GlassWater size={iconSize} />;
+    if (lowerCat.includes("snack") || lowerCat.includes("chip"))
+      return <Coffee size={iconSize} />;
+    if (
+      lowerCat.includes("candy") ||
+      lowerCat.includes("sweet") ||
+      lowerCat.includes("chocolate")
+    )
+      return <Candy size={iconSize} />;
+    if (lowerCat.includes("cookie") || lowerCat.includes("pastry"))
+      return <Cookie size={iconSize} />;
+    if (
+      lowerCat.includes("toilet") ||
+      lowerCat.includes("bath") ||
+      lowerCat.includes("soap")
+    )
+      return <Bath size={iconSize} />;
+    if (
+      lowerCat.includes("meat") ||
+      lowerCat.includes("beef") ||
+      lowerCat.includes("pork") ||
+      lowerCat.includes("steak")
+    )
+      return <Beef size={iconSize} />;
+    if (lowerCat.includes("fish") || lowerCat.includes("seafood"))
+      return <Fish size={iconSize} />;
+    if (
+      lowerCat.includes("fruit") ||
+      lowerCat.includes("apple") ||
+      lowerCat.includes("berry")
+    )
+      return <Apple size={iconSize} />;
+    if (
+      lowerCat.includes("veg") ||
+      lowerCat.includes("carrot") ||
+      lowerCat.includes("potat")
+    )
+      return <Carrot size={iconSize} />;
+    if (
+      lowerCat.includes("bakery") ||
+      lowerCat.includes("bread") ||
+      lowerCat.includes("flour") ||
+      lowerCat.includes("grain")
+    )
+      return <Wheat size={iconSize} />;
+    if (
+      lowerCat.includes("dairy") ||
+      lowerCat.includes("milk") ||
+      lowerCat.includes("egg") ||
+      lowerCat.includes("cheese")
+    )
+      return <Egg size={iconSize} />;
+    if (
+      lowerCat.includes("frozen") ||
+      lowerCat.includes("ice") ||
+      lowerCat.includes("cream")
+    )
+      return <IceCream size={iconSize} />;
+    if (
+      lowerCat.includes("soup") ||
+      lowerCat.includes("noodle") ||
+      lowerCat.includes("ramen")
+    )
+      return <Soup size={iconSize} />;
+    if (
+      lowerCat.includes("beer") ||
+      lowerCat.includes("alcohol") ||
+      lowerCat.includes("liquor")
+    )
+      return <Beer size={iconSize} />;
+    if (
+      lowerCat.includes("baby") ||
+      lowerCat.includes("infant") ||
+      lowerCat.includes("diaper")
+    )
+      return <Baby size={iconSize} />;
+    if (lowerCat.includes("pet") || lowerCat.includes("dog"))
+      return <Dog size={iconSize} />;
+    if (lowerCat.includes("cat")) return <Cat size={iconSize} />;
+    if (
+      lowerCat.includes("paper") ||
+      lowerCat.includes("tissue") ||
+      lowerCat.includes("towel")
+    )
+      return <Scroll size={iconSize} />;
+    if (lowerCat.includes("gift") || lowerCat.includes("card"))
+      return <Tag size={iconSize} />;
+
+    return <Package size={iconSize} />;
+  };
+
+  const handleRequestOTP = async (
+    type: "email" | "password",
+    targetEmail: string,
+    data: any,
+    currentPassword?: string,
+  ) => {
+    setSettingsError("");
+    setIsSendingOTP(true);
+    try {
+      await api.requestOTP({
+        email: targetEmail,
+        type,
+        currentEmail: localStorage.getItem("adminEmail") || currentEmail,
+        currentPassword,
+      });
+      setPendingUpdate(data);
+      setOtpType(type);
+      setOtpTargetEmail(targetEmail);
+      setActiveSetting("otp-verify");
+      setSettingsSuccess(`Verification code sent to ${targetEmail}`);
+      setTimeout(() => setSettingsSuccess(""), 3000);
+    } catch (error) {
+      setSettingsError(
+        error instanceof Error ? error.message : "Failed to send OTP",
+      );
+    } finally {
+      setIsSendingOTP(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpCode.length !== 6) return;
+
+    setSettingsError("");
+    setIsVerifying(true);
+    try {
+      const result = await api.verifyOTP({
+        email: otpTargetEmail,
+        code: otpCode,
+        type: otpType,
+        currentEmail: localStorage.getItem("adminEmail") || currentEmail,
+        payload: pendingUpdate,
+      });
+      if (result.success) {
+        // Execute the pending update
+        if (otpType === "email") {
+          const updatedEmail = pendingUpdate.newEmail;
+          setCurrentEmail(updatedEmail);
+          localStorage.setItem("adminEmail", updatedEmail);
+          setSettingsSuccess("Email updated successfully!");
+        } else {
+          // Here you'd normally call api.updatePassword, but we're simulating local success
+          setSettingsSuccess("Password security updated!");
+        }
+
+        setPendingUpdate(null);
+        setOtpCode("");
+        setTimeout(() => {
+          setSettingsSuccess("");
+          setActiveSetting("profile-list");
+        }, 2000);
+      }
+    } catch (error) {
+      setSettingsError(
+        error instanceof Error ? error.message : "Verification failed",
+      );
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   const handleChangeEmail = (e: React.FormEvent) => {
     e.preventDefault();
     setSettingsError("");
-    setSettingsSuccess("");
 
     if (!newEmail || !emailChangePassword) {
       setSettingsError("Please fill in all required fields");
@@ -66,25 +281,28 @@ const Settings: React.FC<SettingsProps> = ({
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmail)) {
-      setSettingsError("Please enter a valid email address");
+      setSettingsError("Please enter a valid email address.");
       return;
     }
 
-    setSettingsSuccess("Email updated successfully!");
-    setCurrentEmail(newEmail);
-    setNewEmail("");
-    setEmailChangePassword("");
+    if (newEmail.toLowerCase() === currentEmail.toLowerCase()) {
+      setSettingsError("New email must be different from the current one.");
+      return;
+    }
 
-    setTimeout(() => {
-      setSettingsSuccess("");
-      setActiveSetting("profile-list");
-    }, 2000);
+    // For demo/logic: normally check password here
+    if (emailChangePassword.length < 4) {
+      setSettingsError("Verification password is too short.");
+      return;
+    }
+
+    // Request OTP to the NEW email, but verifying CURRENT password
+    handleRequestOTP("email", newEmail, { newEmail }, emailChangePassword);
   };
 
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();
     setSettingsError("");
-    setSettingsSuccess("");
 
     if (!currentPassword || !newPassword || !confirmPassword) {
       setSettingsError("Please fill in all required fields");
@@ -101,15 +319,13 @@ const Settings: React.FC<SettingsProps> = ({
       return;
     }
 
-    setSettingsSuccess("Password security updated!");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-
-    setTimeout(() => {
-      setSettingsSuccess("");
-      setActiveSetting("profile-list");
-    }, 2000);
+    // Request OTP to the CURRENT email, but verifying CURRENT password
+    handleRequestOTP(
+      "password",
+      currentEmail,
+      { newPassword },
+      currentPassword,
+    );
   };
 
   // Category Handlers
@@ -128,11 +344,13 @@ const Settings: React.FC<SettingsProps> = ({
 
   const handleDeleteCategory = (catToDelete: string) => {
     if (catToDelete === "All") return;
-    
+
     // Update products to 'All' category
-    setProducts(products.map(p => 
-      p.category === catToDelete ? { ...p, category: "All" } : p
-    ));
+    setProducts(
+      products.map((p) =>
+        p.category === catToDelete ? { ...p, category: "All" } : p,
+      ),
+    );
 
     setCategories(categories.filter((c) => c !== catToDelete));
     setSettingsSuccess("Category deleted and products moved to 'All'");
@@ -147,24 +365,19 @@ const Settings: React.FC<SettingsProps> = ({
   const handleSaveEdit = () => {
     const newVal = editCategoryValue.trim();
     if (!newVal || !editingCategory) return;
-    if (
-      categories.includes(newVal) &&
-      newVal !== editingCategory
-    ) {
+    if (categories.includes(newVal) && newVal !== editingCategory) {
       setSettingsError("Category name already exists");
       return;
     }
 
     // Update products use the renamed category
-    setProducts(products.map(p => 
-      p.category === editingCategory ? { ...p, category: newVal } : p
-    ));
-
-    setCategories(
-      categories.map((c) =>
-        c === editingCategory ? newVal : c
-      )
+    setProducts(
+      products.map((p) =>
+        p.category === editingCategory ? { ...p, category: newVal } : p,
+      ),
     );
+
+    setCategories(categories.map((c) => (c === editingCategory ? newVal : c)));
     setEditingCategory(null);
     setSettingsSuccess("Category updated");
     setTimeout(() => setSettingsSuccess(""), 2000);
@@ -193,7 +406,8 @@ const Settings: React.FC<SettingsProps> = ({
                 className={`w-full flex items-center gap-2 lg:gap-3 px-3.5 py-2 lg:py-2.5 rounded-lg lg:rounded-xl transition-all duration-300 font-bold text-[11px] lg:text-sm ${
                   activeSetting === "profile-list" ||
                   activeSetting === "email-form" ||
-                  activeSetting === "password-form"
+                  activeSetting === "password-form" ||
+                  activeSetting === "otp-verify"
                     ? "bg-white text-[#4285F4] shadow-sm border border-gray-100"
                     : "text-gray-500 hover:bg-white/60"
                 }`}
@@ -217,7 +431,14 @@ const Settings: React.FC<SettingsProps> = ({
         </div>
 
         {/* Right Content */}
-        <div className="flex-1 p-4 md:p-5 lg:p-6 bg-white flex flex-col overflow-y-auto no-scrollbar">
+        <div
+          className={`flex-1 p-4 md:p-5 lg:p-6 bg-[#F5F9FF] flex flex-col overflow-y-auto no-scrollbar ${
+            activeSetting !== "profile-list" &&
+            activeSetting !== "category-list"
+              ? "justify-center items-center"
+              : ""
+          }`}
+        >
           {/* Messages */}
           {settingsSuccess && (
             <div className="mb-4 p-2.5 lg:p-3 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700 text-[10px] lg:text-xs flex items-center gap-2 animate-in slide-in-from-top-4">
@@ -299,8 +520,8 @@ const Settings: React.FC<SettingsProps> = ({
                 onSubmit={handleAddCategory}
                 className="flex gap-2 lg:gap-2 mb-4 lg:mb-6"
               >
-                <div className="relative flex-1 max-w-xs lg:max-w-sm">
-                  <div className="absolute inset-y-0 left-0 pl-2.5 lg:pl-3 flex items-center pointer-events-none text-gray-400">
+                <div className="relative flex-1 max-w-xs lg:max-max-w-sm">
+                  <div className="absolute inset-y-0 left-0 pl-[19px] lg:pl-6 flex items-center pointer-events-none text-gray-400">
                     <LayoutGrid size={14} className="lg:w-4 lg:h-4" />
                   </div>
                   <input
@@ -308,7 +529,7 @@ const Settings: React.FC<SettingsProps> = ({
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                     placeholder="Add category..."
-                    className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                    className="w-full pl-11 lg:pl-[52px] pr-3 lg:pr-4 py-2 lg:py-2.5 rounded-xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-xs lg:text-sm transition-all"
                   />
                 </div>
                 <button
@@ -356,8 +577,8 @@ const Settings: React.FC<SettingsProps> = ({
                     ) : (
                       <>
                         <div className="flex items-center gap-2.5 lg:gap-3">
-                          <div className="w-7 h-7 lg:w-8 lg:h-8 bg-white rounded-md lg:rounded-lg flex items-center justify-center text-gray-400 group-hover:text-[#4285F4] transition-colors border border-gray-50 lg:border-gray-100">
-                            <LayoutGrid size={12} className="lg:w-4 lg:h-4" />
+                          <div className="w-7 h-7 lg:w-8 lg:h-8 bg-white rounded-lg flex items-center justify-center text-gray-400 group-hover:text-[#4285F4] transition-colors border border-gray-50 lg:border-gray-100">
+                            {getCategoryIcon(cat)}
                           </div>
                           <span className="font-bold text-gray-800 text-[11px] lg:text-sm">
                             {cat}
@@ -398,163 +619,257 @@ const Settings: React.FC<SettingsProps> = ({
           )}
 
           {activeSetting === "email-form" && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-xs lg:max-w-sm">
+            <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-[360px] w-full bg-white p-8 rounded-[32px] shadow-sm shadow-blue-100/50">
               <button
-                onClick={() => setActiveSetting("profile-list")}
-                className="mb-6 lg:mb-8 flex items-center gap-1.5 lg:gap-2 text-gray-500 hover:text-[#4285F4] font-bold text-[10px] lg:text-xs uppercase tracking-widest transition-colors group"
+                onClick={() => {
+                  setActiveSetting("profile-list");
+                  setNewEmail("");
+                  setEmailChangePassword("");
+                }}
+                className="mb-6 flex items-center gap-1.5 text-slate-400 hover:text-blue-600 font-bold text-[9px] uppercase tracking-widest transition-all group"
               >
                 <ArrowLeft
                   size={12}
-                  className="lg:w-4 lg:h-4 group-hover:-translate-x-0.5 lg:group-hover:-translate-x-1 transition-transform"
+                  className="group-hover:-translate-x-1 transition-transform"
                 />
                 Back
               </button>
 
-              <h3 className="text-lg lg:text-xl font-extrabold text-gray-900 mb-0.5">
-                Update Email
-              </h3>
-              <p className="text-gray-500 text-[11px] lg:text-xs font-medium mb-6 lg:mb-8">
-                Change admin contact address.
-              </p>
+              <div className="mb-6">
+                <h1 className="text-2xl font-black text-[#1e293b] mb-1 tracking-tight">
+                  Update Email
+                </h1>
+                <p className="text-slate-400 font-medium text-xs">
+                  Change admin contact address.
+                </p>
+              </div>
 
-              <div className="space-y-3 lg:space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    Current Email
-                  </label>
-                  <div className="px-1 py-2 text-gray-600 font-bold text-xs lg:text-sm">
-                    {currentEmail}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+              <div className="space-y-5 px-2">
+                {/* New Email Input */}
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
                     New Email
                   </label>
                   <div className="relative">
-                    <Mail
-                      size={14}
-                      className="absolute left-2.5 lg:left-3.5 top-1/2 -translate-y-1/2 text-gray-300 lg:w-4 lg:h-4"
-                    />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">
+                      <Mail size={16} />
+                    </div>
                     <input
                       type="email"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      placeholder="admin@example.com"
-                      className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2.5 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                      placeholder="Enter new email address"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100/50 text-[#1e293b] font-bold text-xs transition-all placeholder:text-blue-300"
                     />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+
+                {/* Password Verification Input */}
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock
-                      size={14}
-                      className="absolute left-2.5 lg:left-3.5 top-1/2 -translate-y-1/2 text-gray-300 lg:w-4 lg:h-4"
-                    />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">
+                      <Lock size={16} />
+                    </div>
                     <input
                       type="password"
                       value={emailChangePassword}
                       onChange={(e) => setEmailChangePassword(e.target.value)}
-                      placeholder="Verify identity"
-                      className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2.5 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                      placeholder="Enter password"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100/50 text-[#1e293b] font-bold text-xs transition-all placeholder:text-blue-300"
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
+
                 <button
                   onClick={handleChangeEmail}
-                  className="w-full bg-[#4285F4] text-white py-2 lg:py-2.5 rounded-lg lg:rounded-xl font-bold hover:shadow-md lg:hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.98] transition-all text-[11px] lg:text-sm mt-2 lg:mt-3"
+                  disabled={isSendingOTP}
+                  className="w-full bg-[#0084FF] text-white py-4 rounded-xl font-bold text-sm hover:bg-[#0076E5] hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2"
                 >
-                  Save Changes
+                  {isSendingOTP ? (
+                    <Loader size={18} className="animate-spin" />
+                  ) : (
+                    "Update Email"
+                  )}
                 </button>
               </div>
             </div>
           )}
 
           {activeSetting === "password-form" && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-xs lg:max-w-sm">
+            <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-[360px] w-full bg-white p-8 rounded-[32px] shadow-sm shadow-blue-100/50">
               <button
-                onClick={() => setActiveSetting("profile-list")}
-                className="mb-6 lg:mb-8 flex items-center gap-1.5 lg:gap-2 text-gray-500 hover:text-[#4285F4] font-bold text-[10px] lg:text-xs uppercase tracking-widest transition-colors group"
+                onClick={() => {
+                  setActiveSetting("profile-list");
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                }}
+                className="mb-6 flex items-center gap-1.5 text-slate-400 hover:text-blue-600 font-bold text-[9px] uppercase tracking-widest transition-all group"
               >
                 <ArrowLeft
                   size={12}
-                  className="lg:w-4 lg:h-4 group-hover:-translate-x-0.5 lg:group-hover:-translate-x-1 transition-transform"
+                  className="group-hover:-translate-x-1 transition-transform"
                 />
                 Back
               </button>
 
-              <h3 className="text-lg lg:text-xl font-extrabold text-gray-900 mb-0.5">
-                Security
-              </h3>
-              <p className="text-gray-500 text-[11px] lg:text-xs font-medium mb-6 lg:mb-8">
-                Update admin password.
-              </p>
+              <div className="mb-6">
+                <h1 className="text-2xl font-black text-[#1e293b] mb-1 tracking-tight">
+                  Security
+                </h1>
+                <p className="text-slate-400 font-medium text-xs">
+                  Update admin access password.
+                </p>
+              </div>
 
-              <div className="space-y-2 lg:space-y-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    Current
+              <div className="space-y-5 px-2">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Current Password
                   </label>
-                  <div className="relative">
-                    <Lock
-                      size={14}
-                      className="absolute left-2.5 lg:left-3.5 top-1/2 -translate-y-1/2 text-gray-300 lg:w-4 lg:h-4"
-                    />
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">
+                      <Lock size={16} />
+                    </div>
                     <input
                       type="password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2.5 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                      placeholder="Enter current password"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100/50 text-[#1e293b] font-bold text-xs transition-all placeholder:text-blue-300"
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    New
+
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    New Password
                   </label>
-                  <div className="relative">
-                    <KeyRound
-                      size={14}
-                      className="absolute left-2.5 lg:left-3.5 top-1/2 -translate-y-1/2 text-gray-300 lg:w-4 lg:h-4"
-                    />
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">
+                      <KeyRound size={16} />
+                    </div>
                     <input
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Min 6 characters"
-                      className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2.5 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100/50 text-[#1e293b] font-bold text-xs transition-all placeholder:text-blue-300"
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] lg:text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-                    Confirm
+
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Confirm New Password
                   </label>
-                  <div className="relative">
-                    <KeyRound
-                      size={14}
-                      className="absolute left-2.5 lg:left-3.5 top-1/2 -translate-y-1/2 text-gray-300 lg:w-4 lg:h-4"
-                    />
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">
+                      <CheckCircle2 size={16} />
+                    </div>
                     <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Repeat password"
-                      className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-1.5 lg:py-2.5 rounded-lg lg:rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500 text-gray-900 font-bold text-[11px] lg:text-sm transition-all"
+                      placeholder="Confirm new password"
+                      className="w-full pl-14 pr-4 py-3.5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100/50 text-[#1e293b] font-bold text-xs transition-all placeholder:text-blue-300"
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
+
                 <button
                   onClick={handleChangePassword}
-                  className="w-full bg-[#4285F4] text-white py-2 lg:py-2.5 rounded-lg lg:rounded-xl font-bold hover:shadow-md lg:hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.98] transition-all text-[11px] lg:text-sm mt-2 lg:mt-3"
+                  disabled={isSendingOTP}
+                  className="w-full bg-[#0084FF] text-white py-4 rounded-xl font-bold text-sm hover:bg-[#0076E5] hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2"
                 >
-                  Update Password
+                  {isSendingOTP ? (
+                    <Loader size={18} className="animate-spin" />
+                  ) : (
+                    "Update Password"
+                  )}
                 </button>
               </div>
+            </div>
+          )}
+
+          {activeSetting === "otp-verify" && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-[360px] w-full bg-white p-8 rounded-[32px] shadow-sm shadow-blue-100/50">
+              <button
+                onClick={() =>
+                  setActiveSetting(
+                    otpType === "email" ? "email-form" : "password-form",
+                  )
+                }
+                className="mb-6 flex items-center gap-1.5 text-slate-400 hover:text-blue-600 font-bold text-[9px] uppercase tracking-widest transition-all group"
+              >
+                <ArrowLeft
+                  size={12}
+                  className="group-hover:-translate-x-1 transition-transform"
+                />
+                Back
+              </button>
+
+              <div className="mb-6">
+                <h1 className="text-2xl font-black text-[#1e293b] mb-1 tracking-tight">
+                  Verify Identity
+                </h1>
+                <p className="text-slate-400 font-medium text-xs">
+                  We've sent a 6-digit code to{" "}
+                  <span className="text-blue-600 font-black">
+                    {otpTargetEmail}
+                  </span>
+                </p>
+              </div>
+
+              <form onSubmit={handleVerifyOTP} className="space-y-8 px-2">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Verification Code
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={otpCode}
+                    onChange={(e) =>
+                      setOtpCode(e.target.value.replace(/\D/g, ""))
+                    }
+                    placeholder="000000"
+                    className="w-full text-center tracking-[0.5em] py-5 rounded-2xl bg-[#F8FBFF] border border-blue-50/50 focus:ring-4 focus:ring-blue-100 text-3xl font-black text-[#1e293b] transition-all placeholder:text-blue-200"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={otpCode.length !== 6 || isVerifying}
+                  className="w-full bg-[#0084FF] text-white py-4 rounded-xl font-bold text-sm hover:bg-[#0076E5] hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.98] disabled:bg-gray-200 disabled:shadow-none transition-all flex items-center justify-center gap-2"
+                >
+                  {isVerifying ? (
+                    <Loader size={18} className="animate-spin" />
+                  ) : (
+                    "Verify & Update"
+                  )}
+                </button>
+
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleRequestOTP(otpType, otpTargetEmail, pendingUpdate)
+                    }
+                    disabled={isSendingOTP}
+                    className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-700 transition-colors disabled:opacity-50"
+                  >
+                    Resend Code
+                  </button>
+                </div>
+              </form>
             </div>
           )}
         </div>

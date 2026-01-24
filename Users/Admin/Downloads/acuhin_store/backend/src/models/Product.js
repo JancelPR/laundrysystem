@@ -36,6 +36,12 @@ const productSchema = new mongoose.Schema({
   lowStockThreshold: {
     type: Number,
     default: 5
+  },
+  barcode: {
+    type: String,
+    trim: true,
+    unique: true,
+    sparse: true
   }
 }, {
   timestamps: true

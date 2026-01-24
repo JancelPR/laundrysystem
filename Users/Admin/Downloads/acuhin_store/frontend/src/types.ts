@@ -9,6 +9,7 @@ export interface Product {
   description?: string;
   unit?: string;
   lowStockThreshold?: number;
+  barcode?: string;
 }
 
 export type CategoryType = string;

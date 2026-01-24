@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Search,
-  Calendar,
   Download,
   ChevronDown,
   FileText,
@@ -47,7 +46,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
       if (startDate || endDate) {
         const transactionDate = new Date(transaction.date);
         const start = startDate ? new Date(startDate) : null;
-        const end = endDate ? new Date(endDate + "T23:59:59") : null; // Include entire end date
+        const end = endDate ? new Date(endDate + "T23:59:59") : null; // include entire end date
 
         if (start && transactionDate < start) return false;
         if (end && transactionDate > end) return false;
@@ -86,6 +85,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
               Logs
             </h2>
           </div>
+
           <div className="flex items-center gap-2 flex-wrap">
             <div className="relative">
               <Search
@@ -100,6 +100,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                 className="pl-8 pr-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-50 text-gray-900 w-32 md:w-48"
               />
             </div>
+
             <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
               <input
                 type="date"
@@ -115,6 +116,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                 className="text-xs border-none outline-none text-gray-600 bg-transparent"
               />
             </div>
+
             {(transactionSearchQuery || startDate || endDate) && (
               <button
                 onClick={() => {
@@ -157,14 +159,18 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                     <th className="sticky top-0 z-10 bg-gray-50 px-3 md:px-4 py-3 md:py-4 text-center text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Items
                     </th>
-                    <th className="sticky top-0 z-10 bg-gray-50 px-3 md:px-4 py-3 md:py-4 text-center text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
+
+                    {/* Header stays as-is (right aligned) */}
+                    <th className="sticky top-0 z-10 bg-gray-50 px-3 md:px-4 py-3 md:py-4 text-right text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Total
                     </th>
-                    <th className="sticky top-0 z-10 bg-gray-50 px-3 md:px-4 py-3 md:py-4 text-center text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
+
+                    <th className="sticky top-0 z-10 bg-gray-50 pl-3 md:pl-4 pr-14 md:pr-16 py-3 md:py-4 text-right text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
+
                 <tbody className="divide-y divide-gray-100">
                   {filteredTransactions.map((t) => (
                     <tr
@@ -174,6 +180,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                       <td className="px-3 md:px-4 py-3 md:py-4 text-[11px] md:text-sm text-gray-900 whitespace-nowrap">
                         #{t.id}
                       </td>
+
                       <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                         {(() => {
                           try {
@@ -201,21 +208,27 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                           }
                         })()}
                       </td>
+
                       <td className="px-4 py-4 text-sm text-gray-800 text-center whitespace-nowrap">
                         {t.items.reduce((acc, item) => acc + item.quantity, 0)}{" "}
                         items
                       </td>
-                      <td className="px-3 md:px-4 py-3 md:py-4 text-[11px] md:text-sm font-medium text-green-600 text-center whitespace-nowrap">
-                        {CURRENCY}
-                        {t.total.toFixed(2)}
+
+                      {/* ✅ UPDATED TOTAL CELL: aligned under the Total header (without moving header) */}
+                      <td className="px-3 md:px-4 py-3 md:py-4 text-[11px] md:text-sm font-medium text-green-600 whitespace-nowrap text-right">
+                        <div className="inline-flex items-center justify-end gap-1 w-full tabular-nums">
+                          <span>{CURRENCY}</span>
+                          <span>{t.total.toFixed(2)}</span>
+                        </div>
                       </td>
-                      <td className="px-4 py-4 text-center whitespace-nowrap">
-                        <div className="flex items-center justify-center gap-1.5 md:gap-2">
+
+                      <td className="pl-4 pr-1 md:pr-1.5 py-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5 md:gap-2">
                           <div className="relative download-menu-container">
                             <button
                               onClick={() =>
                                 setOpenDownloadMenu(
-                                  openDownloadMenu === t.id ? null : t.id
+                                  openDownloadMenu === t.id ? null : t.id,
                                 )
                               }
                               className="inline-flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 md:py-1.5 bg-green-50 text-green-600 text-[10px] md:text-xs font-semibold rounded-md hover:bg-green-100 transition-colors"
@@ -227,7 +240,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                                 }`}
                               />
                             </button>
-                            {/* Menu content shortened for brevity but keeps logic */}
+
                             {openDownloadMenu === t.id && (
                               <div className="absolute right-0 mt-1 w-32 md:w-40 bg-white rounded-lg shadow-lg border border-gray-200 z-20 py-1">
                                 <button
@@ -239,6 +252,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                                   <FileText className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-500" />
                                   PDF
                                 </button>
+
                                 <button
                                   onClick={() =>
                                     downloadAsDOC(t, setOpenDownloadMenu)
@@ -248,6 +262,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                                   <FileText className="w-3 h-3 md:w-3.5 md:h-3.5 text-blue-500" />
                                   Word
                                 </button>
+
                                 <button
                                   onClick={() =>
                                     downloadAsCSV(t, setOpenDownloadMenu)
@@ -260,6 +275,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
                               </div>
                             )}
                           </div>
+
                           <button
                             onClick={() => onViewReceipt(t)}
                             className="inline-flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 md:py-1.5 bg-blue-50 text-blue-600 text-[10px] md:text-xs font-semibold rounded-md hover:bg-blue-100 transition-colors"

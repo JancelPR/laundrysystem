@@ -76,6 +76,63 @@ const POS: React.FC<POSProps> = ({
     };
   }, [categories, products]); // Re-check when categories or products change
 
+  // Global Barcode Listener
+  const barcodeBuffer = useRef("");
+  const lastKeyTime = useRef(0);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Don't capture if user is typing in an input or textarea
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+        return;
+      }
+
+      const now = Date.now();
+
+      // Scanners are fast. If time between keys is > 50ms, it's likely manual typing.
+      // But some scanners are slower. Let's use a 100ms threshold for resets.
+      if (now - lastKeyTime.current > 100) {
+        barcodeBuffer.current = "";
+      }
+
+      lastKeyTime.current = now;
+
+      // Most barcodes are alphanumeric. Let's capture characters and digits.
+      if (e.key.length === 1) {
+        barcodeBuffer.current += e.key;
+      } else if (e.key === "Enter") {
+        const code = barcodeBuffer.current.trim();
+        if (code) {
+          const product = products.find((p) => p.barcode === code);
+          if (product && product.stock > 0) {
+            addToCart(product);
+            barcodeBuffer.current = "";
+            // Optional: Show a quick feedback toast/message
+          }
+        }
+        barcodeBuffer.current = "";
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [products]);
+
+  // Barcode Auto-Add Logic for the Search Input
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+
+    // Only auto-add if the string looks like a full barcode (usually min 4-5 chars)
+    // or if the scanner types an Enter which is handled by a separate form submit if we had one.
+    // For manual typing, we wait for an exact match.
+    const exactMatch = products.find((p) => p.barcode === searchQuery.trim());
+    if (exactMatch && exactMatch.stock > 0) {
+      addToCart(exactMatch);
+      setSearchQuery(""); // Clear search after adding
+    }
+  }, [searchQuery, products]);
+
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
       const scrollAmount = 200;
@@ -97,9 +154,10 @@ const POS: React.FC<POSProps> = ({
     return products.filter((product) => {
       const matchesCategory =
         activeCategory === "All" || product.category === activeCategory;
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearch =
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.barcode &&
+          product.barcode.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStock = product.stock > 0; // POS only shows in-stock items generally?
       // Original logic:
       // const matchesStock = stockFilter === 'all' || (stockFilter === 'inStock' && product.stock > 0) ...
@@ -116,7 +174,7 @@ const POS: React.FC<POSProps> = ({
 
   const cartTotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [cart]
+    [cart],
   );
 
   const change = useMemo(() => {
@@ -141,7 +199,7 @@ const POS: React.FC<POSProps> = ({
         return prev.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item
+            : item,
         );
       }
       return [...prev, { ...product, quantity: 1 }];
@@ -171,7 +229,7 @@ const POS: React.FC<POSProps> = ({
     let newQty = parseInt(value);
     if (isNaN(newQty)) {
       setCart((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, quantity: 1 } : item))
+        prev.map((item) => (item.id === id ? { ...item, quantity: 1 } : item)),
       );
       return;
     }
@@ -263,7 +321,7 @@ const POS: React.FC<POSProps> = ({
       alert(
         error instanceof Error
           ? error.message
-          : "Failed to process checkout. Please try again."
+          : "Failed to process checkout. Please try again.",
       );
     }
   };

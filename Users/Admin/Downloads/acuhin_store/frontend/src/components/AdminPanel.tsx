@@ -1,5 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useStickyState } from "../hooks/useStickyState";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { Product, ReceiptData } from "../types";
 import { LogOut, Menu, BarChart3 } from "lucide-react";
 import Sidebar from "./Sidebar";
@@ -41,8 +48,14 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const [isClosingSoon, setIsClosingSoon] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
-  const [prevLowStockCount, setPrevLowStockCount] = useState(0);
+  const [hasUnread, setHasUnread] = useStickyState(
+    false,
+    "notifications_unread",
+  );
+  const [prevLowStockCount, setPrevLowStockCount] = useStickyState(
+    0,
+    "prev_low_stock_count",
+  );
 
   const handleAddCategory = (newCategory: string) => {
     if (!categories.includes(newCategory)) {

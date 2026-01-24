@@ -11,6 +11,7 @@ import LandingPage from "./pages/LandingPage";
 import { Product } from "./types";
 import { UserCircle, Eye, EyeOff } from "lucide-react";
 import { useStoreData } from "./hooks/useStoreData";
+import { api } from "./services/api";
 import loginIllustration from "./assets/login-illustration.png";
 
 const App: React.FC = () => {
@@ -38,25 +39,39 @@ const App: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "admin@store.com" && password === "admin123") {
-      setIsAuthenticated(true);
-      localStorage.setItem("isLoggedIn", "true");
-      setLoginError("");
-      setEmail("");
-      setPassword("");
-      setShowPassword(false);
-      navigate("/admin");
-    } else {
-      setLoginError("Invalid credentials. Try admin@store.com / admin123");
+    setLoginError("");
+    setIsLoggingIn(true);
+
+    try {
+      const result = await api.login({ email, password });
+      if (result.success) {
+        setIsAuthenticated(true);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("adminEmail", result.user.email);
+        setEmail("");
+        setPassword("");
+        setShowPassword(false);
+        navigate("/admin");
+      }
+    } catch (error) {
+      setLoginError(
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.",
+      );
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("adminEmail");
     navigate("/");
   };
 

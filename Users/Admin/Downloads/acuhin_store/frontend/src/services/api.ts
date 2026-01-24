@@ -65,6 +65,57 @@ export const api = {
     }
     return await response.json();
   },
+
+  // Auth
+  async login(credentials: { email: string; password: string }): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: "Login failed" }));
+      throw new Error(error.message || "Login failed");
+    }
+    return await response.json();
+  },
+
+  async requestOTP(data: {
+    email: string;
+    type: "email" | "password";
+    currentEmail?: string;
+    currentPassword?: string;
+  }): Promise<{ message: string }> {
+    const response = await fetch(`${API_BASE_URL}/auth/request-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: "Failed to send OTP" }));
+      throw new Error(error.message || "Failed to send OTP");
+    }
+    return await response.json();
+  },
+
+  async verifyOTP(data: {
+    email: string;
+    code: string;
+    type: "email" | "password";
+    currentEmail?: string;
+    payload?: any;
+  }): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: "Invalid or expired code" }));
+      throw new Error(error.message || "Invalid or expired code");
+    }
+    return await response.json();
+  },
 };
 
 

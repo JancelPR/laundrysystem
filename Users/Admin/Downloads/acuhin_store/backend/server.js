@@ -27,6 +27,10 @@ app.use(express.static(distPath));
 // Connect to Database
 await connectDB();
 
+// Seed Admin
+import { seedAdmin } from './src/seed.js';
+await seedAdmin();
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {

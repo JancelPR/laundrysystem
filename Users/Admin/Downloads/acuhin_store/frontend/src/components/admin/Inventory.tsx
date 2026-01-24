@@ -14,6 +14,7 @@ import {
   Check,
   AlertCircle,
   Trash2,
+  Barcode,
 } from "lucide-react";
 import { api } from "../../services/api";
 import {
@@ -97,9 +98,10 @@ const Inventory: React.FC<InventoryProps> = ({
       // I'll add `activeCategory` to props to maintain behavior.
       const matchesCategory =
         activeCategory === "All" || product.category === activeCategory;
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearch =
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.barcode &&
+          product.barcode.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStock =
         stockFilter === "all" ||
         (stockFilter === "inStock" && product.stock > 0) ||
@@ -120,7 +122,7 @@ const Inventory: React.FC<InventoryProps> = ({
       available: products.filter((p) => p.stock > 0).length,
       outOfStock: products.filter((p) => p.stock === 0).length,
     }),
-    [products]
+    [products],
   );
 
   const availableUnits = useMemo(() => {
@@ -203,14 +205,14 @@ const Inventory: React.FC<InventoryProps> = ({
     const category = currentProduct.category || "Product";
     const imageBase64 = await generateProductImage(
       currentProduct.name,
-      category
+      category,
     );
 
     if (imageBase64) {
       setCurrentProduct((prev) => ({ ...prev, image: imageBase64 }));
     } else {
       alert(
-        "Could not generate image. Please try again or upload one manually."
+        "Could not generate image. Please try again or upload one manually.",
       );
     }
     setIsGeneratingImage(false);
@@ -220,6 +222,20 @@ const Inventory: React.FC<InventoryProps> = ({
     if (!currentProduct.name || !currentProduct.price) {
       alert("Please fill in the required fields (Name and Price).");
       return;
+    }
+
+    // Check for duplicate barcode locally before sending to server
+    if (currentProduct.barcode) {
+      const duplicate = products.find(
+        (p) =>
+          p.barcode === currentProduct.barcode && p.id !== currentProduct.id,
+      );
+      if (duplicate) {
+        alert(
+          `This barcode is already assigned to "${duplicate.name}". Each product must have a unique barcode.`,
+        );
+        return;
+      }
     }
 
     const productData = {
@@ -233,28 +249,40 @@ const Inventory: React.FC<InventoryProps> = ({
         try {
           const updated = await api.updateProduct(
             currentProduct.id,
-            productData as Product
+            productData as Product,
           );
           setProducts((prev) =>
-            prev.map((p) => (p.id === currentProduct.id ? updated : p))
+            prev.map((p) => (p.id === currentProduct.id ? updated : p)),
           );
         } catch (error) {
           console.error("Failed to update product", error);
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to update product.";
           alert(
-            error instanceof Error ? error.message : "Failed to update product."
+            message.includes("Duplicate")
+              ? "This barcode is already in use by another product."
+              : message,
           );
           return;
         }
       } else {
         try {
           const newProduct = await api.createProduct(
-            productData as Omit<Product, "id">
+            productData as Omit<Product, "id">,
           );
           setProducts((prev) => [newProduct, ...prev]);
         } catch (error) {
           console.error("Failed to create product", error);
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to create product.";
           alert(
-            error instanceof Error ? error.message : "Failed to create product."
+            message.includes("Duplicate")
+              ? "This barcode is already in use by another product."
+              : message,
           );
           return;
         }
@@ -282,7 +310,7 @@ const Inventory: React.FC<InventoryProps> = ({
               <span className="font-bold text-gray-800">
                 {currentProduct.name}
               </span>
-            </li>
+            </li>,
           );
         }
         if (originalProduct.price !== currentProduct.price) {
@@ -295,7 +323,7 @@ const Inventory: React.FC<InventoryProps> = ({
               <span className="font-bold text-gray-800">
                 {currentProduct.price}
               </span>
-            </li>
+            </li>,
           );
         }
         if (originalProduct.stock !== currentProduct.stock) {
@@ -308,7 +336,20 @@ const Inventory: React.FC<InventoryProps> = ({
               <span className="font-bold text-gray-800">
                 {currentProduct.stock}
               </span>
-            </li>
+            </li>,
+          );
+        }
+        if (originalProduct.barcode !== currentProduct.barcode) {
+          changes.push(
+            <li key="barcode">
+              Barcode:{" "}
+              <span className="line-through text-gray-400 mr-2">
+                {originalProduct.barcode || "N/A"}
+              </span>{" "}
+              <span className="font-bold text-gray-800">
+                {currentProduct.barcode || "N/A"}
+              </span>
+            </li>,
           );
         }
       }
@@ -346,7 +387,7 @@ const Inventory: React.FC<InventoryProps> = ({
     setIsGeneratingAI(true);
     const desc = await generateProductDescription(
       currentProduct.name,
-      currentProduct.category
+      currentProduct.category,
     );
     setCurrentProduct((prev) => ({ ...prev, description: desc }));
     setIsGeneratingAI(false);
@@ -355,7 +396,7 @@ const Inventory: React.FC<InventoryProps> = ({
   const handleEditUnit = async (oldUnit: string, newUnit: string) => {
     // 1. Update local state for all matching products
     setProducts((prev) =>
-      prev.map((p) => (p.unit === oldUnit ? { ...p, unit: newUnit } : p))
+      prev.map((p) => (p.unit === oldUnit ? { ...p, unit: newUnit } : p)),
     );
 
     // 2. Perform API updates in background (or block if critical)
@@ -380,7 +421,7 @@ const Inventory: React.FC<InventoryProps> = ({
 
   const handleDeleteUnit = async (unit: string) => {
     setProducts((prev) =>
-      prev.map((p) => (p.unit === unit ? { ...p, unit: "pc" } : p))
+      prev.map((p) => (p.unit === unit ? { ...p, unit: "pc" } : p)),
     );
 
     const productsToUpdate = products.filter((p) => p.unit === unit);
@@ -602,6 +643,29 @@ const Inventory: React.FC<InventoryProps> = ({
                     className="w-full bg-gray-50 border-0 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-[#4285F4]/20 focus:bg-white border-transparent focus:border-blue-200 outline-none text-gray-900 text-sm transition-all border border-gray-100"
                     placeholder="e.g. SkyFlakes"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">
+                    Barcode
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4285F4] transition-colors">
+                      <Barcode size={16} />
+                    </div>
+                    <input
+                      type="text"
+                      value={currentProduct.barcode || ""}
+                      onChange={(e) =>
+                        setCurrentProduct({
+                          ...currentProduct,
+                          barcode: e.target.value,
+                        })
+                      }
+                      className="w-full bg-gray-50 border-0 rounded-xl pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-[#4285F4]/20 focus:bg-white border-transparent focus:border-blue-200 outline-none text-gray-900 text-sm transition-all border border-gray-100"
+                      placeholder="Scan or enter barcode"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

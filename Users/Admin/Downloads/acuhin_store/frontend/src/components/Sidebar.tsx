@@ -46,7 +46,7 @@ interface SidebarProps {
   isAdmin?: boolean;
   currentView?: "inventory" | "pos" | "history" | "analytics" | "settings";
   onViewChange?: (
-    view: "inventory" | "pos" | "history" | "analytics" | "settings"
+    view: "inventory" | "pos" | "history" | "analytics" | "settings",
   ) => void;
   onLogout?: () => void;
   isCollapsed?: boolean;
@@ -395,7 +395,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <>
             <button
               onClick={() => onViewChange?.("settings")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-all text-left relative group
+              className={`w-full flex items-center gap-3 px-4 py-3 lg:px-3 lg:py-2.5 rounded-full transition-all text-left relative group
                 ${
                   currentView === "settings"
                     ? "bg-[#E8F0FE] text-[#1967D2]"
@@ -417,7 +417,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={onLogout}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#EA4335] hover:bg-red-50 rounded-full transition-all text-sm font-medium ${
+              className={`w-full flex items-center gap-3 px-4 py-3 lg:px-3 lg:py-2.5 text-[#EA4335] hover:bg-red-50 rounded-full transition-all text-sm font-medium ${
                 isCollapsed ? "justify-center px-0" : ""
               }`}
               title={isCollapsed ? "Logout" : ""}
