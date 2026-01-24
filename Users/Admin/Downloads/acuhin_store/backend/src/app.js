@@ -8,8 +8,7 @@ import { connectDB, mongoose } from './config/db.js';
 const app = express();
 
 // Middleware
-// Enable CORS for all routes and parse JSON bodies with a limit
-app.use(cors());
+// Enable parse JSON bodies with a limit
 app.use(express.json({ limit: '50mb' }));
 
 // Health Check

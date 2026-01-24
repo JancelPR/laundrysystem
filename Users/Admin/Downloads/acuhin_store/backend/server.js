@@ -15,8 +15,28 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 // middleware
+// CORS configuration
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
+  process.env.RENDER_EXTERNAL_URL // Render provides this automatically
+].filter(Boolean);
+
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:5173"],
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      // In production, you might want to be stricter. 
+      // For now, let's allow it if it's from a .render.com subdomain
+      if (origin.endsWith('.render.com')) {
+          return callback(null, true);
+      }
+      return callback(null, true); // Fallback to true for easier initial deployment
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 
