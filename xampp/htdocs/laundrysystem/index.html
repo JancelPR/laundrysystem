@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaundryEase — Your Laundry Picked Up Today. Back Tomorrow.</title>
+  <meta name="description" content="We collect, clean and deliver your clothes back in 24 hours. Premium wash & fold, eco dry cleaning, steam pressing with real-time order tracking.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- HEADER & NAVIGATION                        -->
+  <!-- ========================================== -->
+  <header class="site-header">
+    <div class="site-container">
+      <nav class="nav-wrapper">
+        
+        <!-- Logo -->
+        <a href="#hero" class="brand-link">
+          <div class="brand-icon">🧺</div>
+          <span class="brand-name">Laundry<span>Ease</span></span>
+        </a>
+
+        <!-- Nav Links -->
+        <ul class="nav-menu">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#pricing">Prices & services</a></li>
+          <li><a href="#about-us">About us</a></li>
+          <li><a href="#contact">Store Hours</a></li>
+        </ul>
+
+        <!-- Right Action Buttons -->
+        <div class="nav-actions">
+          <a href="login.html" class="btn-nav-login">Login</a>
+          <a href="login.html" class="btn-nav-book">
+            <span>Book now</span>
+          </a>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero-section" id="hero">
+    <!-- Full-Bleed Seamless Blending Hero Backdrop -->
+    <div class="hero-fullbleed-backdrop" aria-hidden="true">
+      <img src="hero_banner.jpg" alt="" class="hero-fullbleed-img">
+      <div class="hero-blend-overlay"></div>
+    </div>
+
+    <div class="site-container">
+      <div class="hero-grid">
+        
+        <!-- HERO LEFT -->
+        <div class="hero-left">
+          
+          <div class="location-tag">
+            <span>📍 Serving</span> Taculing & Nearby Areas
+          </div>
+
+          <h1 class="hero-heading">
+            Your laundry, <br>
+            <span class="highlight">tracked perfectly.</span>
+          </h1>
+
+          <p class="hero-subtext">
+            Smart, seamless fabric care with real-time tracking from store drop-off to pickup.
+          </p>
+
+          <!-- Interactive Schedule & Intake Card -->
+          <div class="intake-card">
+            
+            <!-- Store Intake & Estimated Pickup Tiles -->
+            <div class="schedule-tiles-row">
+              <div class="schedule-tile">
+                <div class="schedule-tile-icon">🏪</div>
+                <div>
+                  <div class="schedule-tile-label">Store Hours</div>
+                  <div class="schedule-tile-val">7:00 AM - 8:00 PM</div>
+                  <div class="schedule-tile-sub">Daily Walk-in</div>
+                </div>
+              </div>
+
+              <div class="schedule-tile">
+                <div class="schedule-tile-icon">⚡</div>
+                <div>
+                  <div class="schedule-tile-label">Estimated Turnaround</div>
+                  <div class="schedule-tile-val">Same-Day / 24h</div>
+                  <div class="schedule-tile-sub">Express & Standard</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service Select & Search Action Box -->
+            <div class="intake-form-box">
+              <div class="service-select-wrap">
+                <select id="heroServiceSelect" aria-label="Select Laundry Service">
+                  <option value="Wash & Fold">🧺 Wash & Fold (₱35.00 / kg)</option>
+                  <option value="Dry Cleaning">👗 Dry Cleaning (₱150.00 / pc)</option>
+                  <option value="Steam Press">👔 Steam Press (₱80.00 / pc)</option>
+                  <option value="Express Rush">⚡ Express Rush (+₱50.00)</option>
+                </select>
+              </div>
+
+              <div class="intake-input-action-row">
+                <div class="intake-input-wrap">
+                  <span class="input-icon">🔍</span>
+                  <input type="text" id="heroLocationInput" placeholder="Enter Order Code or Mobile Number..." aria-label="Enter Order Code or Mobile Number">
+                </div>
+                <button type="button" class="btn-check-availability" onclick="window.location.href='login.html'">
+                  Track Order
+                </button>
+              </div>
+            </div>
+
+            <div class="intake-reassurance">
+              <span class="check-icon">✓</span>
+              <span>Instant digital claim receipt & real-time order tracking.</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- HERO RIGHT: Floating Step Badge -->
+        <div class="hero-right">
+          
+          <!-- Floating Overlaid 3-Step Summary Card -->
+          <div class="floating-steps-card">
+            
+            <div class="floating-step-item">
+              <div class="floating-step-icon">📥</div>
+              <div class="floating-step-text">
+                <span class="floating-step-title">Drop-off</span>
+                <span class="floating-step-desc">Quick weigh-in & claim receipt.</span>
+              </div>
+            </div>
+
+            <div class="floating-step-item">
+              <div class="floating-step-icon">🧼</div>
+              <div class="floating-step-text">
+                <span class="floating-step-title">We clean</span>
+                <span class="floating-step-desc">Expert care for all your clothes.</span>
+              </div>
+            </div>
+
+            <div class="floating-step-item">
+              <div class="floating-step-icon">🧺</div>
+              <div class="floating-step-text">
+                <span class="floating-step-title">Pick up</span>
+                <span class="floating-step-desc">Fresh, clean clothes ready on time.</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Trust Bar -->
+      <div class="hero-trust-bar">
+        <div class="trust-item">
+          <span class="star-rating">★★★★★</span>
+          <span>4.9 out of 5</span>
+        </div>
+        <div class="trust-item">
+          <span>🧺 25,000+ happy laundry orders</span>
+        </div>
+        <div class="trust-item">
+          <span>🛡️ Trusted & Verified Clean Guarantee</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- HOW IT WORKS SECTION                       -->
+  <!-- ========================================== -->
+  <section class="content-section" id="how-it-works">
+    <div class="site-container">
+      
+      <div class="section-head">
+        <span class="section-badge">Simple 3-Step Process</span>
+        <h2 class="section-main-title">How LaundryEase Works</h2>
+        <p class="section-description">Effortless laundry in three simple steps, designed to give you your precious time back.</p>
+      </div>
+
+      <div class="workflow-step-grid">
+        
+        <div class="step-box">
+          <span class="step-badge">Step 01</span>
+          <div class="step-main-icon">🧺</div>
+          <h3 class="step-heading">Schedule or Drop-Off</h3>
+          <p class="step-body-text">Book online in seconds or visit our station. We weigh your load and assign a digital claim code.</p>
+        </div>
+
+        <div class="step-box">
+          <span class="step-badge">Step 02</span>
+          <div class="step-main-icon">🧼</div>
+          <h3 class="step-heading">Expert Washing & Care</h3>
+          <p class="step-body-text">We separate fabrics, use premium eco-detergents, and follow exact garment care specifications.</p>
+        </div>
+
+        <div class="step-box">
+          <span class="step-badge">Step 03</span>
+          <div class="step-main-icon">🧺</div>
+          <h3 class="step-heading">Pick Up Fresh & Folded</h3>
+          <p class="step-body-text">Your clothes are sanitized, crisp, and neatly folded — ready for pickup with live portal tracking.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- PRICES & SERVICES SECTION                  -->
+  <!-- ========================================== -->
+  <section class="content-section" id="pricing" style="border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="site-container">
+      
+      <div class="section-head">
+        <span class="section-badge">Clear Pricing</span>
+        <h2 class="section-main-title">Services & Transparent Rates</h2>
+        <p class="section-description">Affordable, upfront pricing with zero hidden fees. Pick the package that fits your lifestyle.</p>
+      </div>
+
+      <div class="services-card-grid">
+        
+        <!-- Wash & Fold -->
+        <div class="clean-service-card highlight-card">
+          <div class="card-top-tag">Most Popular</div>
+          <div class="service-icon-box">🧺</div>
+          <h3 class="card-service-title">Wash & Fold</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Standard hygiene wash for everyday clothes, towels, and bed linens.</p>
+          
+          <div class="card-price-row">
+            <span class="price-currency">₱</span>
+            <span class="price-num">35.00</span>
+            <span class="price-unit">/ kilogram</span>
+          </div>
+
+          <ul class="service-bullet-list">
+            <li><span class="check">✓</span> Deep fabric sanitizing wash</li>
+            <li><span class="check">✓</span> Premium floral fabric conditioner</li>
+            <li><span class="check">✓</span> Tumble dried & crisp machine fold</li>
+            <li><span class="check">✓</span> Sealed protective packaging</li>
+          </ul>
+
+          <a href="login.html" class="btn-card-action btn-primary-action">
+            Book Wash & Fold
+          </a>
+        </div>
+
+        <!-- Dry Cleaning -->
+        <div class="clean-service-card">
+          <div class="service-icon-box">👗</div>
+          <h3 class="card-service-title">Dry Cleaning</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Delicate solvent treatment for suits, barongs, gowns, and coats.</p>
+          
+          <div class="card-price-row">
+            <span class="price-currency">₱</span>
+            <span class="price-num">150.00</span>
+            <span class="price-unit">/ piece</span>
+          </div>
+
+          <ul class="service-bullet-list">
+            <li><span class="check">✓</span> Zero-shrinkage delicate solvent</li>
+            <li><span class="check">✓</span> Expert spot stain removal</li>
+            <li><span class="check">✓</span> Garment shape preservation</li>
+            <li><span class="check">✓</span> Individual garment dust bag</li>
+          </ul>
+
+          <a href="login.html" class="btn-card-action">
+            Book Dry Cleaning
+          </a>
+        </div>
+
+        <!-- Steam Press -->
+        <div class="clean-service-card">
+          <div class="service-icon-box">👔</div>
+          <h3 class="card-service-title">Steam Press</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">High-temperature steam iron finishing for professional wear.</p>
+          
+          <div class="card-price-row">
+            <span class="price-currency">₱</span>
+            <span class="price-num">80.00</span>
+            <span class="price-unit">/ piece</span>
+          </div>
+
+          <ul class="service-bullet-list">
+            <li><span class="check">✓</span> High-temp 180°C sterilization</li>
+            <li><span class="check">✓</span> Razor-sharp crease formation</li>
+            <li><span class="check">✓</span> Hanger-ready protective wrap</li>
+            <li><span class="check">✓</span> Wrinkle-free guarantee</li>
+          </ul>
+
+          <a href="login.html" class="btn-card-action">
+            Book Steam Press
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- WHY CHOOSE US / ABOUT SECTION              -->
+  <!-- ========================================== -->
+  <section class="content-section" id="about-us">
+    <div class="site-container">
+      
+      <div class="section-head">
+        <span class="section-badge">Quality Guarantee</span>
+        <h2 class="section-main-title">Why Choose LaundryEase?</h2>
+        <p class="section-description">Combining state-of-the-art washing tech with dedicated garment care.</p>
+      </div>
+
+      <div class="features-container-grid">
+        
+        <div class="feature-tile">
+          <div class="feature-tile-icon">⚡</div>
+          <h3 class="feature-tile-title">24-Hour Turnaround</h3>
+          <p class="feature-tile-desc">Standard 24-hour turnaround guaranteed, plus same-day 6-hour rush service available.</p>
+        </div>
+
+        <div class="feature-tile">
+          <div class="feature-tile-icon">🌿</div>
+          <h3 class="feature-tile-title">Eco-Friendly & Gentle</h3>
+          <p class="feature-tile-desc">Hypoallergenic, plant-based detergents that protect fabric fibers and are safe for sensitive skin.</p>
+        </div>
+
+        <div class="feature-tile">
+          <div class="feature-tile-icon">📱</div>
+          <h3 class="feature-tile-title">Live Tracking Portal</h3>
+          <p class="feature-tile-desc">Check your laundry progress in real time from washing to drying, pressing, and delivery.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- FOOTER                                     -->
+  <!-- ========================================== -->
+  <footer class="site-footer" id="contact">
+    <div class="site-container">
+      
+      <div class="footer-columns-grid">
+        
+        <div class="footer-brand">
+          <a href="#hero" class="brand-link" style="color: #ffffff;">
+            <div class="brand-icon">🧺</div>
+            <span class="brand-name" style="color: #ffffff;">Laundry<span>Ease</span></span>
+          </a>
+          <p>Your premier on-demand laundry and dry cleaning partner. Fresh, clean, and delivered in 24 hours.</p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#pricing">Wash & Fold</a></li>
+            <li><a href="#pricing">Dry Cleaning</a></li>
+            <li><a href="#pricing">Steam Pressing</a></li>
+            <li><a href="#pricing">Express Rush Service</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="login.html">Sign In / Register</a></li>
+            <li><a href="#about-us">Quality Guarantee</a></li>
+            <li><a href="customer_dashboard.php">Customer Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h4>Store Hours & Support</h4>
+          <ul>
+            <li>🕒 Mon - Sun: 7:00 AM - 8:00 PM</li>
+            <li>📱 Hotline: 0917-123-4567</li>
+            <li>📍 Taculing, Bacolod City</li>
+            <li>✉️ support@laundryease.ph</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom-bar">
+        <span>&copy; 2026 LaundryEase Platform. All rights reserved.</span>
+        <span>Fresh & clean clothes ready on time.</span>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
