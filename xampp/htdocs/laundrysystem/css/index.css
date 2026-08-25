@@ -43,11 +43,24 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
 }
 
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 body {
@@ -1104,23 +1117,39 @@ body {
   margin-bottom: 6px;
 }
 
+/* Disable native browser password reveal/clear icons (Edge/IE) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 .input-wrap {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .input-icon {
   position: absolute;
   left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #64748b;
   pointer-events: none;
   display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
 }
 
 .clean-input {
   width: 100%;
+  flex: 1 1 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -1139,6 +1168,39 @@ body {
   background: rgba(15, 23, 42, 0.9);
   border-color: var(--teal-light);
   box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
+}
+
+.clean-input.has-toggle {
+  padding-right: 44px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  z-index: 5;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.1);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid var(--teal-light);
 }
 
 .util-row {
@@ -1236,4 +1298,252 @@ body {
   justify-content: center;
   margin-bottom: 18px;
   color: #2dd4bf;
+}
+
+/* ========================================== */
+/* LIVE PUBLIC ORDER TRACKING MODAL           */
+/* ========================================== */
+.track-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 19, 41, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.track-modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.track-modal-dialog {
+  background: #0f1d38;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(45, 212, 191, 0.15);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: #ffffff;
+  padding: 28px;
+  position: relative;
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.track-modal-backdrop.active .track-modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.track-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.track-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.track-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.3), rgba(2, 132, 199, 0.3));
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.track-dialog-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #f0fdfa;
+}
+
+.track-dialog-header p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 4px 0 0 0;
+}
+
+.track-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.track-close-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Order Details Card */
+.track-meta-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.track-meta-item label {
+  color: #64748b;
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.track-meta-item span {
+  font-weight: 600;
+  color: #f0fdfa;
+}
+
+/* Stepper Progress Bar */
+.track-stepper-container {
+  margin: 28px 0;
+  position: relative;
+}
+
+.track-stepper-list {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.track-stepper-line {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.track-stepper-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #0d9488, #2dd4bf, #38bdf8);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+}
+
+.track-step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  text-align: center;
+}
+
+.track-step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0b1329;
+  border: 2px solid #334155;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.track-step-node.completed .track-step-circle {
+  background: #0d9488;
+  border-color: #2dd4bf;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(45, 212, 191, 0.4);
+}
+
+.track-step-node.current .track-step-circle {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+  transform: scale(1.15);
+  animation: pulseStep 1.8s infinite;
+}
+
+@keyframes pulseStep {
+  0%, 100% { box-shadow: 0 0 12px rgba(56, 189, 248, 0.8); }
+  50% { box-shadow: 0 0 24px rgba(56, 189, 248, 1), 0 0 35px rgba(45, 212, 191, 0.6); }
+}
+
+.track-step-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 8px;
+  transition: color 0.3s ease;
+}
+
+.track-step-node.completed .track-step-label,
+.track-step-node.current .track-step-label {
+  color: #2dd4bf;
+}
+
+/* Status Banner */
+.track-status-banner {
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.2), rgba(2, 132, 199, 0.2));
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.track-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #2dd4bf;
+  color: #0f172a;
 }

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/index.css?v=11">
 </head>
 <body>
 
@@ -109,9 +109,9 @@
               <div class="intake-input-action-row">
                 <div class="intake-input-wrap">
                   <span class="input-icon">🔍</span>
-                  <input type="text" id="heroLocationInput" placeholder="Enter Order Code or Mobile Number..." aria-label="Enter Order Code or Mobile Number">
+                  <input type="text" id="heroLocationInput" placeholder="Enter Order Code (e.g. ORD-1001) or Phone..." aria-label="Enter Order Code or Mobile Number" onkeydown="if(event.key==='Enter') trackPublicOrder()">
                 </div>
-                <button type="button" class="btn-check-availability" onclick="window.location.href='login.html'">
+                <button type="button" class="btn-check-availability" id="heroTrackBtn" onclick="trackPublicOrder()">
                   Track Order
                 </button>
               </div>
@@ -403,6 +403,173 @@
 
     </div>
   </footer>
+
+  <!-- ========================================== -->
+  <!-- PUBLIC ORDER TRACKING MODAL                -->
+  <!-- ========================================== -->
+  <div id="publicTrackModal" class="track-modal-backdrop" onclick="if(event.target===this) closeTrackModal()">
+    <div class="track-modal-dialog">
+      <div class="track-dialog-header">
+        <div class="track-title-row">
+          <div class="track-icon-box">🧺</div>
+          <div>
+            <h3 id="trackModalOrderCode">Order #ORD-XXXX</h3>
+            <p id="trackModalDate">Placed on --</p>
+          </div>
+        </div>
+        <button type="button" class="track-close-btn" onclick="closeTrackModal()">&times;</button>
+      </div>
+
+      <!-- Masked Customer & Service Summary -->
+      <div class="track-meta-card">
+        <div class="track-meta-item">
+          <label>Customer</label>
+          <span id="trackModalCustomer">--</span>
+        </div>
+        <div class="track-meta-item">
+          <label>Mobile Contact</label>
+          <span id="trackModalPhone">--</span>
+        </div>
+        <div class="track-meta-item">
+          <label>Registered Services</label>
+          <span id="trackModalServices">--</span>
+        </div>
+        <div class="track-meta-item">
+          <label>Weight & Amount</label>
+          <span id="trackModalWeightAmount">-- kg &bull; ₱--</span>
+        </div>
+      </div>
+
+      <!-- Live Stepper Progress -->
+      <div class="track-stepper-container">
+        <div class="track-stepper-line">
+          <div class="track-stepper-progress" id="trackProgressBar" style="width: 20%;"></div>
+        </div>
+        <ul class="track-stepper-list">
+          <li class="track-step-node" id="stepNode0">
+            <div class="track-step-circle">📦</div>
+            <div class="track-step-label">Received</div>
+          </li>
+          <li class="track-step-node" id="stepNode1">
+            <div class="track-step-circle">🫧</div>
+            <div class="track-step-label">Washing</div>
+          </li>
+          <li class="track-step-node" id="stepNode2">
+            <div class="track-step-circle">🌀</div>
+            <div class="track-step-label">Drying</div>
+          </li>
+          <li class="track-step-node" id="stepNode3">
+            <div class="track-step-circle">🧺</div>
+            <div class="track-step-label">Folding</div>
+          </li>
+          <li class="track-step-node" id="stepNode4">
+            <div class="track-step-circle">🏷️</div>
+            <div class="track-step-label">Ready</div>
+          </li>
+          <li class="track-step-node" id="stepNode5">
+            <div class="track-step-circle">✅</div>
+            <div class="track-step-label">Claimed</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Status Banner -->
+      <div class="track-status-banner">
+        <div>
+          <span style="font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Current Stage</span>
+          <div style="font-weight: 700; font-size: 1.05rem; color: #f0fdfa; margin-top: 2px;" id="trackCurrentStatusText">In Washing</div>
+        </div>
+        <div>
+          <span class="track-status-badge" id="trackPaymentBadge">PAID</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function closeTrackModal() {
+      document.getElementById('publicTrackModal').classList.remove('active');
+    }
+
+    async function trackPublicOrder(customQuery) {
+      const input = document.getElementById('heroLocationInput');
+      const query = customQuery || (input ? input.value.trim() : '');
+
+      if (!query) {
+        alert('Please enter your Order Code (e.g. ORD-1001) or Registered Mobile Number.');
+        if (input) input.focus();
+        return;
+      }
+
+      const trackBtn = document.getElementById('heroTrackBtn');
+      if (trackBtn) {
+        trackBtn.disabled = true;
+        trackBtn.textContent = 'Searching...';
+      }
+
+      try {
+        const response = await fetch(`api/track_order.php?q=${encodeURIComponent(query)}`);
+        const result = await response.json();
+
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+          const order = result.data[0];
+          displayTrackingResult(order);
+        } else {
+          alert(result.message || 'No matching order found. Please check your order code or phone number.');
+        }
+      } catch (err) {
+        console.error('Tracking Error:', err);
+        alert('Unable to connect to order tracking service. Please try again.');
+      } finally {
+        if (trackBtn) {
+          trackBtn.disabled = false;
+          trackBtn.textContent = 'Track Order';
+        }
+      }
+    }
+
+    function displayTrackingResult(order) {
+      document.getElementById('trackModalOrderCode').textContent = `Order #${order.order_code}`;
+      document.getElementById('trackModalDate').textContent = `Dropped off: ${new Date(order.dropped_off_at).toLocaleString()}`;
+      document.getElementById('trackModalCustomer').textContent = order.customer_name;
+      document.getElementById('trackModalPhone').textContent = order.customer_phone;
+      document.getElementById('trackModalServices').textContent = order.services;
+      document.getElementById('trackModalWeightAmount').textContent = `${parseFloat(order.weight_kg).toFixed(2)} kg • ₱${parseFloat(order.total_price).toFixed(2)}`;
+      document.getElementById('trackCurrentStatusText').textContent = order.order_status;
+      
+      const pBadge = document.getElementById('trackPaymentBadge');
+      pBadge.textContent = (order.payment_status || 'Unpaid').toUpperCase();
+      pBadge.style.background = (order.payment_status.toLowerCase() === 'paid') ? '#2dd4bf' : '#f59e0b';
+
+      const stepIndex = Math.min(5, Math.max(0, parseInt(order.step_index) || 0));
+      const progressPct = (stepIndex / 5) * 100;
+      document.getElementById('trackProgressBar').style.width = `${progressPct}%`;
+
+      for (let i = 0; i <= 5; i++) {
+        const node = document.getElementById(`stepNode${i}`);
+        if (!node) continue;
+        node.classList.remove('completed', 'current');
+        if (i < stepIndex) {
+          node.classList.add('completed');
+        } else if (i === stepIndex) {
+          node.classList.add('current');
+        }
+      }
+
+      document.getElementById('publicTrackModal').classList.add('active');
+    }
+
+    // Auto-track if URL contains ?track=ORD-XXXX
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackCode = urlParams.get('track');
+      if (trackCode) {
+        const input = document.getElementById('heroLocationInput');
+        if (input) input.value = trackCode;
+        trackPublicOrder(trackCode);
+      }
+    });
+  </script>
 
 </body>
 </html>

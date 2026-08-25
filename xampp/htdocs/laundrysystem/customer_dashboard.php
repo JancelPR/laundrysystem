@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/aquatic-theme.css?v=2">
+  <link rel="stylesheet" href="css/aquatic-theme.css?v=18">
+  <script src="js/user-profile.js"></script>
 </head>
 <body>
 
@@ -30,31 +31,49 @@
     </div>
   </header>
 
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
   <!-- SIDEBAR NAVIGATION -->
   <aside>
-    <div>
-      <div class="brand-section">
-        <div class="brand-dot"></div>
-        <span class="brand-signature">Main Navigation</span>
+    <!-- Circular Edge Toggle Button -->
+    <button type="button" class="sidebar-edge-toggle" id="sidebarEdgeToggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Collapse / Expand Sidebar">
+      <svg class="sidebar-edge-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="sidebar-inner-wrap">
+      <div>
+        <div class="brand-section">
+          <div class="brand-dot"></div>
+          <span class="brand-signature">Main Navigation</span>
+        </div>
+
+        <nav class="nav-group">
+          <a href="#" class="nav-item is-active" data-title="My Tracked Loads">
+            <span class="nav-icon">📦</span> <span class="nav-label">My Tracked Loads</span>
+          </a>
+          <a href="#" class="nav-item" data-title="Pricing Packages">
+            <span class="nav-icon">🏷️</span> <span class="nav-label">Pricing Packages</span>
+          </a>
+        </nav>
       </div>
 
-      <nav class="nav-group">
-        <a href="#" class="nav-item is-active">
-          <span>📦</span> <span>My Tracked Loads</span>
+      <div class="user-profile-summary">
+        <a href="javascript:void(0)" class="nav-item" data-title="Settings" onclick="UserProfileManager.openProfileModal()">
+          <span class="nav-icon">⚙️</span> <span class="nav-label">Settings</span>
         </a>
-        <a href="#" class="nav-item">
-          <span>🏷️</span> <span>Pricing Packages</span>
-        </a>
-        <a href="#" class="nav-item">
-          <span>⚙️</span> <span>Preferences</span>
-        </a>
-      </nav>
-    </div>
-
-    <div class="user-profile-summary">
-      <div class="user-name" id="displayUserName">Loading...</div>
-      <div class="user-phone" id="displayUserPhone">...</div>
-      <button class="logout-btn" onclick="logout()">← Sign Out</button>
+        <button class="logout-btn" onclick="event.stopPropagation(); logout();" title="Sign Out" data-title="Sign Out">
+          <span class="logout-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </span>
+          <span class="logout-text">Sign Out</span>
+        </button>
+      </div>
     </div>
   </aside>
 
@@ -101,7 +120,46 @@
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', fetchDashboardData);
+    document.addEventListener('DOMContentLoaded', () => {
+      initSidebarCollapse();
+      fetchDashboardData();
+    });
+
+    function toggleSidebar(forceState) {
+      const isCurrentlyCollapsed = document.body.classList.contains('sidebar-collapsed');
+      const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyCollapsed;
+      
+      document.body.classList.toggle('sidebar-collapsed', newState);
+      localStorage.setItem('laundry_sidebar_collapsed', newState ? '1' : '0');
+      
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.classList.toggle('is-collapsed', newState);
+        toggleBtn.setAttribute('aria-expanded', !newState);
+      }
+      
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (backdrop) {
+        if (window.innerWidth <= 768) {
+          backdrop.classList.toggle('active', !newState);
+        } else {
+          backdrop.classList.remove('active');
+        }
+      }
+    }
+
+    function initSidebarCollapse() {
+      const saved = localStorage.getItem('laundry_sidebar_collapsed');
+      const shouldCollapse = (saved === '1') || (saved === null && window.innerWidth <= 1024);
+      if (shouldCollapse) {
+        document.body.classList.add('sidebar-collapsed');
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+        if (toggleBtn) {
+          toggleBtn.classList.add('is-collapsed');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    }
 
     async function fetchDashboardData() {
       const token = localStorage.getItem('authToken');
@@ -128,11 +186,19 @@
 
         const data = await response.json();
         
-        const customerName = data.user.fullName || 'Customer';
+        const customerName = data.user.fullName || data.user.full_name || 'Customer';
         document.getElementById('welcomeCustomerName').innerText = customerName;
         document.getElementById('displayUserName').innerText = customerName;
         document.getElementById('topCustRoleBadge').innerText = customerName;
         document.getElementById('displayUserPhone').innerText = data.user.phone || 'N/A';
+
+        UserProfileManager.init({
+          id: data.user.id,
+          full_name: customerName,
+          phone: data.user.phone || '',
+          address: data.user.address || '',
+          role: 'customer'
+        });
 
         const tbody = document.getElementById('ordersTableBody');
         tbody.innerHTML = '';

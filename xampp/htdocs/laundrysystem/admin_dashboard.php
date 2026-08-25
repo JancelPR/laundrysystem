@@ -8,7 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/aquatic-theme.css?v=2">
+  <link rel="stylesheet" href="css/aquatic-theme.css?v=18">
+  <script src="js/receipt-printer.js"></script>
+  <script src="js/customer-notifier.js"></script>
+  <script src="js/user-profile.js"></script>
 </head>
 <body>
 
@@ -24,8 +27,6 @@
       </div>
     </div>
 
-
-
     <div class="top-bar-right">
       <div class="user-role-badge">
         <span>👤</span> <span id="topUserRoleName">Admin Manager</span>
@@ -33,47 +34,74 @@
     </div>
   </header>
 
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
   <!-- SIDEBAR NAVIGATION -->
   <aside>
-    <div>
-      <div class="brand-section">
-        <div class="brand-dot"></div>
-        <span class="brand-signature">Main Navigation</span>
+    <!-- Circular Edge Toggle Button -->
+    <button type="button" class="sidebar-edge-toggle" id="sidebarEdgeToggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Collapse / Expand Sidebar">
+      <svg class="sidebar-edge-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="sidebar-inner-wrap">
+      <div>
+        <div class="brand-section">
+          <div class="brand-dot"></div>
+          <span class="brand-signature">Main Navigation</span>
+        </div>
+
+        <nav class="nav-group">
+          <a href="javascript:void(0)" class="nav-item is-active" data-module="overview" data-title="Master Overview" onclick="switchModule('overview', this)">
+            <span class="nav-icon">📊</span> <span class="nav-label">Master Overview</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item" data-module="records" data-title="Laundry Records" onclick="switchModule('records', this)">
+            <span class="nav-icon">🧺</span> <span class="nav-label">Laundry Records</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item" data-module="analytics" data-title="Sales Analytics" onclick="switchModule('analytics', this)">
+            <span class="nav-icon">📈</span> <span class="nav-label">Sales Analytics</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item" data-module="inventory" data-title="Supplies & Inventory" onclick="switchModule('inventory', this)">
+            <span class="nav-icon">🧴</span> <span class="nav-label">Supplies & Inventory</span>
+          </a>
+          
+          <!-- Manage Account Dropdown Menu -->
+          <div class="nav-item-dropdown">
+            <button type="button" class="nav-item nav-item-btn" data-title="User Management" onclick="toggleManageAccountMenu(event)">
+              <div class="nav-item-left">
+                <span class="nav-icon">👥</span>
+                <span class="nav-label">User Management</span>
+              </div>
+              <svg id="manageAccChevron" class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="nav-submenu" id="manageAccSubmenu" style="display: none;">
+              <a href="javascript:void(0)" class="submenu-item" data-module="staff" data-title="Staff Accounts" onclick="switchModule('staff', this)">
+                <span class="nav-icon">👔</span> <span class="nav-label">Staff</span>
+              </a>
+              <a href="javascript:void(0)" class="submenu-item" data-module="customers" data-title="Customer Accounts" onclick="switchModule('customers', this)">
+                <span class="nav-icon">👥</span> <span class="nav-label">Customers</span>
+              </a>
+            </div>
+          </div>
+        </nav>
       </div>
 
-      <nav class="nav-group">
-        <a href="javascript:void(0)" class="nav-item is-active" data-module="overview" onclick="switchModule('overview', this)">
-          <span>📊</span> <span>Master Overview</span>
+      <div class="user-profile-summary">
+        <a href="javascript:void(0)" class="nav-item" data-module="settings" data-title="System Settings" onclick="switchModule('settings', this)">
+          <span class="nav-icon">⚙️</span> <span class="nav-label">Settings</span>
         </a>
-        <a href="javascript:void(0)" class="nav-item" data-module="records" onclick="switchModule('records', this)">
-          <span>🧺</span> <span>Laundry Records</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-item" data-module="analytics" onclick="switchModule('analytics', this)">
-          <span>📈</span> <span>Sales Analytics</span>
-        </a>
-        
-        <!-- Manage Account Dropdown Menu -->
-        <div class="nav-item-dropdown">
-          <button type="button" class="nav-item nav-item-btn" onclick="toggleManageAccountMenu(event)">
-            <span style="display: flex; align-items: center; gap: 12px;"><span>👥</span> <span>User Management</span></span>
-            <svg id="manageAccChevron" class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </button>
-          <div class="nav-submenu" id="manageAccSubmenu" style="display: none;">
-            <a href="javascript:void(0)" class="submenu-item" data-module="staff" onclick="switchModule('staff', this)">
-              <span>👔</span> <span>Staff</span>
-            </a>
-            <a href="javascript:void(0)" class="submenu-item" data-module="customers" onclick="switchModule('customers', this)">
-              <span>👥</span> <span>Customers</span>
-            </a>
-          </div>
-        </div>
-      </nav>
-    </div>
-
-    <div class="user-profile-summary">
-      <div class="user-name" id="displayAdminName">Admin Manager</div>
-      <div class="user-phone" id="displayAdminPhone">System Administrator</div>
-      <button class="logout-btn" onclick="logout()">← Sign Out</button>
+        <button class="logout-btn" onclick="event.stopPropagation(); logout();" title="Sign Out" data-title="Sign Out">
+          <span class="logout-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </span>
+          <span class="logout-text">Sign Out</span>
+        </button>
+      </div>
     </div>
   </aside>
 
@@ -201,7 +229,10 @@
         </div>
 
         <!-- RIGHT: Anchored Top Right New Order Button -->
-        <div class="ml-auto flex items-center">
+        <div class="ml-auto flex items-center gap-2">
+          <button type="button" class="btn-export-csv" onclick="exportOrdersToCSV()" title="Download Excel-compatible CSV sales report">
+            <span>📥</span> Export CSV Report
+          </button>
           <button class="btn-create-order" onclick="window.openNewOrderModal()">
             <span>🧺</span> + New Order
           </button>
@@ -393,7 +424,286 @@
         </table>
       </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- MODULE 5: SUPPLIES & INVENTORY MODULE       -->
+    <!-- ========================================== -->
+    <div id="module-inventory" class="dashboard-module-view" style="display: none;">
+      <!-- Inventory KPI Row -->
+      <div class="metrics-row mb-6">
+        <div class="metric-card">
+          <div class="metric-label">Tracked Supply Items</div>
+          <div class="metric-value text-slate-100" id="invTotalItemsCount">0 Items</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Low Stock Alerts</div>
+          <div class="metric-value text-amber-400" id="invLowStockCount">0 Items</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Critical / Out of Stock</div>
+          <div class="metric-value text-red-400" id="invCriticalCount">0 Items</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total Inventory Value</div>
+          <div class="metric-value text-teal-400" id="invTotalValue">₱0.00</div>
+        </div>
+      </div>
+
+      <!-- Inventory Table Container -->
+      <div class="data-table-container">
+        <div class="table-section-title flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">📦</span>
+            <div>
+              <div class="font-bold text-slate-100 text-sm">Store Supply & Consumables Ledger</div>
+              <div class="text-[11px] text-slate-400">Current on-hand quantities, reorder thresholds & quick restock</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="inventorySearchInput" placeholder="🔍 Search supply name or category..." class="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-teal-500 w-60" oninput="renderInventoryTable()">
+            <button type="button" class="btn-export-csv py-2 px-3 text-xs" onclick="loadInventoryTable()" title="Refresh Stock Data">
+              <span>🔄</span>
+            </button>
+            <button class="btn-create-order py-2 px-3.5 text-xs whitespace-nowrap" onclick="openAddSupplyModal()" title="Register New Supply Item">
+              <span>🧴</span> + Add Supply Item
+            </button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Category</th>
+              <th>Current Stock</th>
+              <th>Unit</th>
+              <th>Reorder Alert</th>
+              <th>Unit Cost</th>
+              <th>Status</th>
+              <th>Quick Stock Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminInventoryTableBody">
+            <tr>
+              <td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading inventory records...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODULE 6: SYSTEM & STORE SETTINGS MODULE    -->
+    <!-- ========================================== -->
+    <div id="module-settings" class="dashboard-module-view" style="display: none;">
+      <div class="view-header flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div>
+          <h1 class="view-title">System & Store Settings</h1>
+          <p class="view-subtitle">Configure store business profile, service rate card, thermal receipt & messaging defaults.</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button type="button" class="btn-export-csv" onclick="loadSettings()">
+            <span>↺</span> Discard Changes
+          </button>
+          <button type="button" class="btn-create-order" onclick="saveSettings()">
+            <span>💾</span> Save All Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings 2-Column Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- CARD 1: Store Business Details -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl flex flex-col gap-4">
+          <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
+            <span class="text-xl">🏪</span>
+            <div>
+              <h3 class="font-heading font-bold text-sm text-slate-100 m-0">Store & Branch Profile</h3>
+              <p class="text-[11px] text-slate-400 m-0">Store branding displayed on receipts and notifications</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 text-xs">
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Store / Laundromat Name</label>
+              <input type="text" id="settingStoreName" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500 font-medium" placeholder="e.g. LaundryEase Hub">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">Official Hotline / WhatsApp</label>
+                <input type="text" id="settingStorePhone" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500" placeholder="+63 917 123 4567">
+              </div>
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">Operating Hours</label>
+                <input type="text" id="settingOperatingHours" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500" placeholder="Mon - Sun: 7am - 8pm">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Store / Branch Location Address</label>
+              <textarea id="settingStoreAddress" rows="2" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500 resize-none" placeholder="123 Coastal Ave, Suite 101, Metro Manila"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Service Rates & Pricing Card -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl flex flex-col gap-4">
+          <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
+            <span class="text-xl">🏷️</span>
+            <div>
+              <h3 class="font-heading font-bold text-sm text-slate-100 m-0">Service Pricing & Rates (₱ PHP)</h3>
+              <p class="text-[11px] text-slate-400 m-0">Base unit pricing and surcharge parameters for POS orders</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 text-xs">
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">🧺 Wash & Fold (₱/kg)</label>
+                <input type="number" step="0.5" id="settingRateWashFold" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-teal-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="35.00">
+              </div>
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">👗 Dry Clean (₱/pc)</label>
+                <input type="number" step="0.5" id="settingRateDryClean" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-teal-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="150.00">
+              </div>
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">👔 Steam Press (₱/pc)</label>
+                <input type="number" step="0.5" id="settingRateSteamPress" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-teal-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="80.00">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">🎓 Student Flat Rate (₱/6kg)</label>
+                <input type="number" step="1" id="settingRateStudent" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-amber-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="120.00">
+              </div>
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">⚡ Express Rush Surcharge (₱)</label>
+                <input type="number" step="1" id="settingFeeExpressRush" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-rose-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="150.00">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Thermal Receipt Customization -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl flex flex-col gap-4">
+          <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
+            <span class="text-xl">🧾</span>
+            <div>
+              <h3 class="font-heading font-bold text-sm text-slate-100 m-0">80mm Thermal Receipt Layout</h3>
+              <p class="text-[11px] text-slate-400 m-0">Header, footer and disclaimer text printed on customer claim stubs</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 text-xs">
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Receipt Top Greeting / Tagline</label>
+              <input type="text" id="settingReceiptHeader" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500" placeholder="Thank you for choosing LaundryEase!">
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Claim Policy & Disclaimer Notice</label>
+              <textarea id="settingReceiptFooter" rows="2" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-500 resize-none" placeholder="Please present this claim stub upon pickup. Unclaimed laundry after 30 days will be donated."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Account Security & Profile Settings -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl flex flex-col gap-4">
+          <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
+            <span class="text-xl">🔐</span>
+            <div>
+              <h3 class="font-heading font-bold text-sm text-slate-100 m-0">Admin Security & Profile</h3>
+              <p class="text-[11px] text-slate-400 m-0">Manage administrator account credentials and password security</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-200 text-xs">Admin Profile & Contact Details</div>
+                <div class="text-[11px] text-slate-400">Update system administrator name, phone and address</div>
+              </div>
+              <button type="button" onclick="UserProfileManager.openProfileModal()" class="px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-white border border-teal-500/30 text-xs font-semibold transition-all cursor-pointer">
+                ✏️ Edit Profile
+              </button>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-200 text-xs">Account Password & Security</div>
+                <div class="text-[11px] text-slate-400">Change your login password with secure bcrypt hashing</div>
+              </div>
+              <button type="button" onclick="UserProfileManager.openPasswordModal()" class="px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500 text-sky-300 hover:text-white border border-sky-500/30 text-xs font-semibold transition-all cursor-pointer">
+                🔑 Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </main>
+
+  <!-- MODAL: Add Supply Item Modal -->
+  <div class="modal-overlay" id="add-supply-modal">
+    <div class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 w-[92%] max-w-[480px] overflow-hidden transform scale-95 transition-all duration-200 flex flex-col">
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-800/40">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🧴</span>
+          <div>
+            <h3 class="font-heading font-bold text-sm text-slate-100 m-0">Add New Supply Item</h3>
+            <div class="text-[11px] text-teal-400">Add detergents, packaging or chemical stock</div>
+          </div>
+        </div>
+        <button class="modal-close w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-lg transition-colors cursor-pointer border-none" type="button" onclick="closeAddSupplyModal()">&times;</button>
+      </div>
+
+      <form id="add-supply-form" onsubmit="saveSupplyItem(event)" class="p-4 flex flex-col gap-3 m-0">
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Item / Brand Name *</label>
+          <input type="text" id="supplyItemName" name="item_name" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500" placeholder="e.g. Liquid Detergent (Lavender)" required>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Category</label>
+            <select id="supplyCategory" name="category" class="w-full px-2.5 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500">
+              <option value="Detergent">Detergent</option>
+              <option value="Softener">Softener</option>
+              <option value="Bleach">Bleach</option>
+              <option value="Packaging">Packaging</option>
+              <option value="Chemicals">Chemicals</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Unit of Measurement</label>
+            <input type="text" id="supplyUnit" name="unit" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500" placeholder="Liters / Pcs / Bottles" value="Liters" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Current Stock</label>
+            <input type="number" step="0.1" id="supplyCurrentStock" name="current_stock" class="w-full px-2.5 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500" value="10" required>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Reorder Level</label>
+            <input type="number" step="0.1" id="supplyReorderLevel" name="reorder_level" class="w-full px-2.5 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500" value="5" required>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Cost / Unit (₱)</label>
+            <input type="number" step="0.01" id="supplyCostPerUnit" name="cost_per_unit" class="w-full px-2.5 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 focus:outline-none focus:border-teal-500" value="50.00" required>
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-800 mt-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer" onclick="closeAddSupplyModal()">Cancel</button>
+          <button type="submit" class="btn-create-order" id="saveSupplySubmitBtn">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL: Modern Clean 2-Column Laundry POS "New Order" Modal -->
   <div class="modal-overlay" id="new-order-modal">
@@ -929,9 +1239,46 @@
     let currentActiveOrder = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+      initSidebarCollapse();
       fetchAdminData();
       initPOSModalEvents();
     });
+
+    function toggleSidebar(forceState) {
+      const isCurrentlyCollapsed = document.body.classList.contains('sidebar-collapsed');
+      const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyCollapsed;
+      
+      document.body.classList.toggle('sidebar-collapsed', newState);
+      localStorage.setItem('laundry_sidebar_collapsed', newState ? '1' : '0');
+      
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.classList.toggle('is-collapsed', newState);
+        toggleBtn.setAttribute('aria-expanded', !newState);
+      }
+      
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (backdrop) {
+        if (window.innerWidth <= 768) {
+          backdrop.classList.toggle('active', !newState);
+        } else {
+          backdrop.classList.remove('active');
+        }
+      }
+    }
+
+    function initSidebarCollapse() {
+      const saved = localStorage.getItem('laundry_sidebar_collapsed');
+      const shouldCollapse = (saved === '1') || (saved === null && window.innerWidth <= 1024);
+      if (shouldCollapse) {
+        document.body.classList.add('sidebar-collapsed');
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+        if (toggleBtn) {
+          toggleBtn.classList.add('is-collapsed');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    }
 
     const fetchAdminDashboard = fetchAdminData;
 
@@ -1157,9 +1504,18 @@
             });
             const data = await res.json();
             if (!res.ok) { alert(data.message || 'Error creating order.'); return; }
-            alert(`Order ${data.order_code} created successfully!`);
             window.closeNewOrderModal();
             fetchAdminData();
+            ReceiptPrinter.openReceipt({
+              order_code: data.order_code,
+              full_name: (custType === 'existing') ? (document.getElementById('pos-customer-select').selectedOptions[0]?.text || 'Customer') : payload.newCustomer.fullName,
+              phone: (custType === 'existing') ? '' : payload.newCustomer.phone,
+              services_registered: payload.service + (payload.expressRush ? ', Express Rush' : '') + (payload.studentRate ? ', Student Rate' : ''),
+              weight_kg: payload.weightKg,
+              total_price: payload.totalPrice,
+              payment_status: payload.paymentStatus,
+              order_status: 'Pending'
+            });
           } catch (err) {
             alert('Server error creating order.');
             console.error(err);
@@ -1508,8 +1864,20 @@
                 </td>
                 <td onclick="event.stopPropagation();">
                   <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="ReceiptPrinter.openReceipt(allOrdersData.find(o => o.id == ${order.id}))" title="Print Thermal Receipt / Claim Stub" class="w-8 h-8 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 text-emerald-300 hover:text-white border border-emerald-500/30 hover:border-emerald-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="Print Receipt">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                      </svg>
+                    </button>
+                    <button type="button" onclick="CustomerNotifier.openNotifyModal(allOrdersData.find(o => o.id == ${order.id}))" title="Notify Customer (WhatsApp / SMS)" class="w-8 h-8 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-300 hover:text-white border border-amber-500/30 hover:border-amber-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="Notify Customer">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                    </button>
                     <button type="button" onclick="openOrderDetailsModal(${order.id})" title="View Order Summary" class="w-8 h-8 rounded-lg bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-white border border-teal-500/30 hover:border-teal-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="View Order">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
@@ -1979,12 +2347,24 @@
 
         const data = await response.json();
         
-        const adminName = data.user.fullName || 'Admin Manager';
-        document.getElementById('displayAdminName').innerText = adminName;
+        const adminName = data.user.fullName || data.user.full_name || 'Admin Manager';
+        if (document.getElementById('displayAdminName')) {
+          document.getElementById('displayAdminName').innerText = adminName;
+        }
         if (document.getElementById('topUserRoleName')) {
           document.getElementById('topUserRoleName').innerText = adminName;
         }
-        document.getElementById('displayAdminPhone').innerText = `System Administrator`;
+        if (document.getElementById('displayAdminPhone')) {
+          document.getElementById('displayAdminPhone').innerText = `System Administrator`;
+        }
+
+        UserProfileManager.init({
+          id: data.user.id,
+          full_name: adminName,
+          phone: data.user.phone || '',
+          address: data.user.address || '',
+          role: 'admin'
+        });
 
         const totalRevenue = parseFloat(data.metrics.totalRevenue || 0);
         document.getElementById('metricRevenue').innerText = `₱${totalRevenue.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
@@ -2298,6 +2678,378 @@
       localStorage.clear();
       sessionStorage.clear();
       window.location.replace('index.html');
+    }
+
+    // ==========================================
+    // MODULE SWITCHER LOGIC
+    // ==========================================
+    function switchModule(moduleName, element) {
+      if (moduleName === 'staff') {
+        openManageUsersModal('staff');
+        return;
+      }
+
+      // Hide all module views
+      document.querySelectorAll('.dashboard-module-view').forEach(v => {
+        v.style.display = 'none';
+      });
+
+      // Show target view
+      const target = document.getElementById(`module-${moduleName}`);
+      if (target) {
+        target.style.display = 'block';
+      }
+
+      // Update active nav class
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('is-active');
+      });
+
+      if (element) {
+        element.classList.add('is-active');
+      } else {
+        const matchingLink = document.querySelector(`.nav-item[data-module="${moduleName}"]`);
+        if (matchingLink) matchingLink.classList.add('is-active');
+      }
+
+      // Load specific module data
+      if (moduleName === 'records') {
+        renderOrdersTable();
+      } else if (moduleName === 'customers') {
+        loadCustomersTable();
+      } else if (moduleName === 'inventory') {
+        loadInventoryTable();
+      } else if (moduleName === 'analytics') {
+        renderSalesAnalytics();
+      } else if (moduleName === 'settings') {
+        loadSettings();
+      }
+    }
+
+    // ==========================================
+    // SYSTEM SETTINGS LOGIC
+    // ==========================================
+    async function loadSettings() {
+      try {
+        const res = await fetch('api/get_settings.php');
+        const json = await res.json();
+        if (json.status === 'success' && json.data) {
+          const d = json.data;
+          if (document.getElementById('settingStoreName')) document.getElementById('settingStoreName').value = d.store_name || '';
+          if (document.getElementById('settingStorePhone')) document.getElementById('settingStorePhone').value = d.store_phone || '';
+          if (document.getElementById('settingStoreAddress')) document.getElementById('settingStoreAddress').value = d.store_address || '';
+          if (document.getElementById('settingOperatingHours')) document.getElementById('settingOperatingHours').value = d.operating_hours || '';
+          if (document.getElementById('settingRateWashFold')) document.getElementById('settingRateWashFold').value = d.rate_wash_fold || '35.00';
+          if (document.getElementById('settingRateDryClean')) document.getElementById('settingRateDryClean').value = d.rate_dry_clean || '150.00';
+          if (document.getElementById('settingRateSteamPress')) document.getElementById('settingRateSteamPress').value = d.rate_steam_press || '80.00';
+          if (document.getElementById('settingRateStudent')) document.getElementById('settingRateStudent').value = d.rate_student || '120.00';
+          if (document.getElementById('settingFeeExpressRush')) document.getElementById('settingFeeExpressRush').value = d.fee_express_rush || '150.00';
+          if (document.getElementById('settingReceiptHeader')) document.getElementById('settingReceiptHeader').value = d.receipt_header || '';
+          if (document.getElementById('settingReceiptFooter')) document.getElementById('settingReceiptFooter').value = d.receipt_footer || '';
+        }
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+
+    async function saveSettings() {
+      const payload = {
+        store_name: document.getElementById('settingStoreName')?.value.trim() || '',
+        store_phone: document.getElementById('settingStorePhone')?.value.trim() || '',
+        store_address: document.getElementById('settingStoreAddress')?.value.trim() || '',
+        operating_hours: document.getElementById('settingOperatingHours')?.value.trim() || '',
+        rate_wash_fold: document.getElementById('settingRateWashFold')?.value || '35.00',
+        rate_dry_clean: document.getElementById('settingRateDryClean')?.value || '150.00',
+        rate_steam_press: document.getElementById('settingRateSteamPress')?.value || '80.00',
+        rate_student: document.getElementById('settingRateStudent')?.value || '120.00',
+        fee_express_rush: document.getElementById('settingFeeExpressRush')?.value || '150.00',
+        receipt_header: document.getElementById('settingReceiptHeader')?.value.trim() || '',
+        receipt_footer: document.getElementById('settingReceiptFooter')?.value.trim() || ''
+      };
+
+      try {
+        const res = await fetch('api/save_settings.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.status === 'success') {
+          alert('System & store settings saved successfully!');
+        } else {
+          alert(json.message || 'Failed to save settings.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server communication error while saving settings.');
+      }
+    }
+
+    // ==========================================
+    // CSV EXPORT LOGIC
+    // ==========================================
+    function exportOrdersToCSV() {
+      let url = 'api/export_sales_csv.php?';
+      const params = [];
+
+      if (currentDateFilter.from) {
+        params.push(`start_date=${encodeURIComponent(currentDateFilter.from)}`);
+      }
+      if (currentDateFilter.to) {
+        params.push(`end_date=${encodeURIComponent(currentDateFilter.to)}`);
+      }
+      if (currentFilterStatus && currentFilterStatus !== 'All') {
+        params.push(`status=${encodeURIComponent(currentFilterStatus)}`);
+      }
+
+      url += params.join('&');
+      window.location.href = url;
+    }
+
+    // ==========================================
+    // INVENTORY MANAGEMENT LOGIC
+    // ==========================================
+    let allInventoryData = [];
+
+    async function loadInventoryTable() {
+      const tbody = document.getElementById('adminInventoryTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading supplies ledger...</td></tr>';
+
+      try {
+        const res = await fetch('api/get_inventory.php');
+        const data = await res.json();
+
+        if (data.status === 'success' && data.data) {
+          allInventoryData = data.data;
+          renderInventoryTable();
+          updateInventoryKPIs();
+        } else {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: #f87171;">Failed to load inventory.</td></tr>';
+        }
+      } catch (err) {
+        console.error('Error fetching inventory:', err);
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: #f87171;">Server connection error.</td></tr>';
+      }
+    }
+
+    function updateInventoryKPIs() {
+      let totalItems = allInventoryData.length;
+      let lowStock = 0;
+      let criticalStock = 0;
+      let totalValue = 0;
+
+      allInventoryData.forEach(item => {
+        const stock = parseFloat(item.current_stock) || 0;
+        const reorder = parseFloat(item.reorder_level) || 5;
+        const cost = parseFloat(item.cost_per_unit) || 0;
+
+        totalValue += (stock * cost);
+
+        if (stock <= 0) {
+          criticalStock++;
+        } else if (stock <= reorder) {
+          lowStock++;
+        }
+      });
+
+      const elTotal = document.getElementById('invTotalItemsCount');
+      if (elTotal) elTotal.textContent = `${totalItems} Items`;
+
+      const elLow = document.getElementById('invLowStockCount');
+      if (elLow) elLow.textContent = `${lowStock} Item${lowStock !== 1 ? 's' : ''}`;
+
+      const elCrit = document.getElementById('invCriticalCount');
+      if (elCrit) elCrit.textContent = `${criticalStock} Item${criticalStock !== 1 ? 's' : ''}`;
+
+      const elVal = document.getElementById('invTotalValue');
+      if (elVal) elVal.textContent = `₱${totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+
+    function renderInventoryTable() {
+      const tbody = document.getElementById('adminInventoryTableBody');
+      if (!tbody) return;
+
+      const search = (document.getElementById('inventorySearchInput')?.value || '').toLowerCase().trim();
+      const filtered = allInventoryData.filter(i => {
+        return !search || (i.item_name && i.item_name.toLowerCase().includes(search)) || (i.category && i.category.toLowerCase().includes(search));
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">No supply items found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        const stock = parseFloat(item.current_stock) || 0;
+        const reorder = parseFloat(item.reorder_level) || 5;
+        const cost = parseFloat(item.cost_per_unit) || 0;
+
+        let badgeClass = 'stock-good';
+        let badgeText = 'IN STOCK';
+        if (stock <= 0) {
+          badgeClass = 'stock-critical';
+          badgeText = 'OUT OF STOCK';
+        } else if (stock <= reorder) {
+          badgeClass = 'stock-low';
+          badgeText = 'LOW STOCK';
+        }
+
+        return `
+          <tr>
+            <td>
+              <div class="flex items-center gap-2">
+                <span class="text-base">${getCategoryIcon(item.category)}</span>
+                <strong style="color:#ffffff;">${item.item_name}</strong>
+              </div>
+            </td>
+            <td>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-800 text-slate-300 border border-slate-700">${item.category}</span>
+            </td>
+            <td>
+              <span style="font-size: 0.95rem; font-weight: 700; color: ${stock <= reorder ? '#f87171' : '#2dd4bf'};">${stock.toFixed(1)}</span>
+            </td>
+            <td>
+              <span class="text-slate-300 text-xs">${item.unit}</span>
+            </td>
+            <td>
+              <span class="text-slate-400 text-xs font-mono">&le; ${reorder.toFixed(1)} ${item.unit}</span>
+            </td>
+            <td>
+              <span class="text-slate-200 font-semibold text-xs">₱${cost.toFixed(2)}</span>
+            </td>
+            <td>
+              <span class="stock-badge ${badgeClass}">${badgeText}</span>
+            </td>
+            <td>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="adjustSupplyStock(${item.id}, ${stock}, 5)" title="+5 Quick Restock" class="px-2 py-1 rounded bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-white border border-teal-500/30 text-xs font-bold transition-all cursor-pointer">
+                  +5
+                </button>
+                <button type="button" onclick="adjustSupplyStock(${item.id}, ${stock}, -1)" title="-1 Usage Deduction" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition-all cursor-pointer">
+                  -1
+                </button>
+                <button type="button" onclick="promptCustomStock(${item.id}, ${stock})" title="Set Custom Stock Quantity" class="px-2 py-1 rounded bg-sky-500/10 hover:bg-sky-500 text-sky-300 hover:text-white border border-sky-500/30 text-xs font-semibold transition-all cursor-pointer">
+                  Set
+                </button>
+                <button type="button" onclick="deleteSupplyItem(${item.id}, '${item.item_name.replace(/'/g, "\\'")}')" title="Delete Item" class="w-7 h-7 rounded bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 flex items-center justify-center text-xs transition-all cursor-pointer">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getCategoryIcon(cat) {
+      const map = {
+        'Detergent': '🫧',
+        'Softener': '🌸',
+        'Bleach': '✨',
+        'Packaging': '🛍️',
+        'Chemicals': '🧪',
+        'Other': '📦'
+      };
+      return map[cat] || '📦';
+    }
+
+    function openAddSupplyModal() {
+      const form = document.getElementById('add-supply-form');
+      if (form) form.reset();
+      const modal = document.getElementById('add-supply-modal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeAddSupplyModal() {
+      const modal = document.getElementById('add-supply-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    async function saveSupplyItem(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('saveSupplySubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const payload = {
+        item_name: form.item_name.value.trim(),
+        category: form.category.value,
+        unit: form.unit.value.trim(),
+        current_stock: parseFloat(form.current_stock.value) || 0,
+        reorder_level: parseFloat(form.reorder_level.value) || 5,
+        cost_per_unit: parseFloat(form.cost_per_unit.value) || 0
+      };
+
+      try {
+        const res = await fetch('api/create_inventory_item.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          closeAddSupplyModal();
+          loadInventoryTable();
+        } else {
+          alert(data.message || 'Failed to save supply item.');
+        }
+      } catch (err) {
+        console.error('Error saving item:', err);
+        alert('Server communication error.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Item';
+      }
+    }
+
+    async function adjustSupplyStock(id, currentStock, delta) {
+      const newStock = Math.max(0, currentStock + delta);
+      try {
+        const res = await fetch('api/update_inventory_stock.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, current_stock: newStock })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          loadInventoryTable();
+        } else {
+          alert(data.message || 'Could not update stock.');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function promptCustomStock(id, currentStock) {
+      const val = prompt("Enter new current stock count for this item:", currentStock);
+      if (val !== null && !isNaN(val)) {
+        const num = Math.max(0, parseFloat(val));
+        adjustSupplyStock(id, 0, num);
+      }
+    }
+
+    async function deleteSupplyItem(id, name) {
+      if (!confirm(`Are you sure you want to remove "${name}" from inventory?`)) return;
+
+      try {
+        const res = await fetch('api/delete_inventory_item.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          loadInventoryTable();
+        } else {
+          alert(data.message || 'Could not delete item.');
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   </script>
 </body>

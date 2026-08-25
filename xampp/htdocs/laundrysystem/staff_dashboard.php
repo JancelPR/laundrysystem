@@ -8,7 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/aquatic-theme.css?v=2">
+  <link rel="stylesheet" href="css/aquatic-theme.css?v=18">
+  <script src="js/receipt-printer.js"></script>
+  <script src="js/customer-notifier.js"></script>
+  <script src="js/user-profile.js"></script>
 </head>
 <body>
 
@@ -24,8 +27,6 @@
       </div>
     </div>
 
-
-
     <div class="top-bar-right">
       <div class="user-role-badge">
         <span>👔</span> <span id="topStaffRoleBadge">Staff Operator</span>
@@ -33,31 +34,52 @@
     </div>
   </header>
 
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
   <!-- SIDEBAR NAVIGATION -->
   <aside>
-    <div>
-      <div class="brand-section">
-        <div class="brand-dot"></div>
-        <span class="brand-signature">Main Navigation</span>
+    <!-- Circular Edge Toggle Button -->
+    <button type="button" class="sidebar-edge-toggle" id="sidebarEdgeToggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Collapse / Expand Sidebar">
+      <svg class="sidebar-edge-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="sidebar-inner-wrap">
+      <div>
+        <div class="brand-section">
+          <div class="brand-dot"></div>
+          <span class="brand-signature">Main Navigation</span>
+        </div>
+
+        <nav class="nav-group">
+          <a href="javascript:void(0)" class="nav-item is-active" data-module="overview" data-title="Staff Overview" onclick="switchModule('overview', this)">
+            <span class="nav-icon">📊</span> <span class="nav-label">Staff Overview</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item" data-module="records" data-title="Laundry Records" onclick="switchModule('records', this)">
+            <span class="nav-icon">🧺</span> <span class="nav-label">Laundry Records</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item" data-module="customers" data-title="Customer Directory" onclick="switchModule('customers', this)">
+            <span class="nav-icon">👥</span> <span class="nav-label">Customer Directory</span>
+          </a>
+        </nav>
       </div>
 
-      <nav class="nav-group">
-        <a href="javascript:void(0)" class="nav-item is-active" data-module="overview" onclick="switchModule('overview', this)">
-          <span>📊</span> <span>Staff Overview</span>
+      <div class="user-profile-summary">
+        <a href="javascript:void(0)" class="nav-item" data-module="settings" data-title="Account Settings" onclick="UserProfileManager.openProfileModal()">
+          <span class="nav-icon">⚙️</span> <span class="nav-label">Settings</span>
         </a>
-        <a href="javascript:void(0)" class="nav-item" data-module="records" onclick="switchModule('records', this)">
-          <span>🧺</span> <span>Laundry Records</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-item" data-module="customers" onclick="switchModule('customers', this)">
-          <span>👥</span> <span>Customer Directory</span>
-        </a>
-      </nav>
-    </div>
-
-    <div class="user-profile-summary">
-      <div class="user-name" id="displayStaffName">Staff Member</div>
-      <div class="user-phone" id="displayStaffPhone">Station Operator</div>
-      <button class="logout-btn" onclick="logout()">← Sign Out</button>
+        <button class="logout-btn" onclick="event.stopPropagation(); logout();" title="Sign Out" data-title="Sign Out">
+          <span class="logout-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </span>
+          <span class="logout-text">Sign Out</span>
+        </button>
+      </div>
     </div>
   </aside>
 
@@ -791,9 +813,46 @@
     let currentActiveOrder = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+      initSidebarCollapse();
       fetchStaffDashboard();
       initPOSModalEvents();
     });
+
+    function toggleSidebar(forceState) {
+      const isCurrentlyCollapsed = document.body.classList.contains('sidebar-collapsed');
+      const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyCollapsed;
+      
+      document.body.classList.toggle('sidebar-collapsed', newState);
+      localStorage.setItem('laundry_sidebar_collapsed', newState ? '1' : '0');
+      
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.classList.toggle('is-collapsed', newState);
+        toggleBtn.setAttribute('aria-expanded', !newState);
+      }
+      
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (backdrop) {
+        if (window.innerWidth <= 768) {
+          backdrop.classList.toggle('active', !newState);
+        } else {
+          backdrop.classList.remove('active');
+        }
+      }
+    }
+
+    function initSidebarCollapse() {
+      const saved = localStorage.getItem('laundry_sidebar_collapsed');
+      const shouldCollapse = (saved === '1') || (saved === null && window.innerWidth <= 1024);
+      if (shouldCollapse) {
+        document.body.classList.add('sidebar-collapsed');
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+        if (toggleBtn) {
+          toggleBtn.classList.add('is-collapsed');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    }
 
     const servicesList = [
       { id: 'wash_fold', name: 'Wash & Fold', rate: 35, unit: '/kg', icon: '🧺' },
@@ -946,10 +1005,18 @@
               body: JSON.stringify(payload)
             });
             const data = await res.json();
-            if (!res.ok) { alert(data.message || 'Error creating order.'); return; }
-            alert(`Order ${data.order_code} created successfully!`);
             window.closeNewOrderModal();
             fetchStaffDashboard();
+            ReceiptPrinter.openReceipt({
+              order_code: data.order_code,
+              full_name: (custType === 'existing') ? (document.getElementById('pos-customer-select').selectedOptions[0]?.text || 'Customer') : payload.newCustomer.fullName,
+              phone: (custType === 'existing') ? '' : payload.newCustomer.phone,
+              services_registered: payload.service + (payload.expressRush ? ', Express Rush' : '') + (payload.studentRate ? ', Student Rate' : ''),
+              weight_kg: payload.weightKg,
+              total_price: payload.totalPrice,
+              payment_status: payload.paymentStatus,
+              order_status: 'Pending'
+            });
           } catch (err) {
             alert('Server error creating order.');
             console.error(err);
@@ -1286,8 +1353,20 @@
                 </td>
                 <td onclick="event.stopPropagation();">
                   <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="ReceiptPrinter.openReceipt(allOrdersData.find(o => o.id == ${order.id}))" title="Print Thermal Receipt / Claim Stub" class="w-8 h-8 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 text-emerald-300 hover:text-white border border-emerald-500/30 hover:border-emerald-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="Print Receipt">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                      </svg>
+                    </button>
+                    <button type="button" onclick="CustomerNotifier.openNotifyModal(allOrdersData.find(o => o.id == ${order.id}))" title="Notify Customer (WhatsApp / SMS)" class="w-8 h-8 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-300 hover:text-white border border-amber-500/30 hover:border-amber-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="Notify Customer">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                    </button>
                     <button type="button" onclick="openOrderDetailsModal(${order.id})" title="View Order Summary" class="w-8 h-8 rounded-lg bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-white border border-teal-500/30 hover:border-teal-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="View Order">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
@@ -1370,12 +1449,20 @@
 
         const data = await response.json();
         
-        const staffName = data.user.fullName || 'Staff Operator';
+        const staffName = data.user.fullName || data.user.full_name || 'Staff Operator';
         document.getElementById('displayStaffName').innerText = staffName;
         if (document.getElementById('topStaffRoleBadge')) {
           document.getElementById('topStaffRoleBadge').innerText = staffName;
         }
         document.getElementById('displayStaffPhone').innerText = `Role: STAFF`;
+
+        UserProfileManager.init({
+          id: data.user.id,
+          full_name: staffName,
+          phone: data.user.phone || '',
+          address: data.user.address || '',
+          role: 'staff'
+        });
 
         allOrdersData = data.orders || [];
 
