@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Dashboard — LaundryEase</title>
+  <title>Customer Dashboard — Athena's Laundry Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/aquatic-theme.css?v=18">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/aquatic-theme.css?v=26">
   <script src="js/user-profile.js"></script>
 </head>
 <body>
@@ -15,12 +15,11 @@
   <!-- TOP HEADER BAR -->
   <header class="top-header-bar">
     <div class="top-bar-left">
-      <div class="brand-icon-box">🧺</div>
-      <div class="brand-text-block">
-        <div class="brand-title-row">
-          <span class="brand-name-text">LaundryEase</span>
-        </div>
-        <span class="brand-subtitle-text">Service Tracking and Profit Computation Platform</span>
+      <a href="index.html" title="Athena's Laundry Shop" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-dashboard">
+      </a>
+      <div class="brand-text-block" style="margin-left: 8px;">
+        <span class="brand-subtitle-text">Customer Order Tracking & History</span>
       </div>
     </div>
 
@@ -94,28 +93,30 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Standard Base Rate</div>
-        <div class="metric-value">₱50 <span style="font-size:1rem; font-weight:400; color:var(--text-muted);">/ kg</span></div>
+        <div class="metric-value">₱25 <span style="font-size:1rem; font-weight:400; color:var(--text-muted);">/ kg</span></div>
       </div>
     </div>
 
     <div class="data-table-container">
       <div class="table-section-title">Current Laundry Log</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Unique Order ID</th>
-            <th>Services Registered</th>
-            <th>Weight / Pricing</th>
-            <th>Special Instructions Given</th>
-            <th>Order Status</th>
-          </tr>
-        </thead>
-        <tbody id="ordersTableBody">
-          <tr>
-            <td colspan="5" style="text-align:center; color: var(--text-muted);">Loading laundry log...</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Unique Order ID</th>
+              <th>Services Registered</th>
+              <th>Weight / Pricing</th>
+              <th>Special Instructions Given</th>
+              <th>Order Status</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr>
+              <td colspan="5" style="text-align:center; color: var(--text-muted);">Loading laundry log...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 

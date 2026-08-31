@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard — LaundryEase</title>
+  <title>Admin Dashboard — Athena's Laundry Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/aquatic-theme.css?v=18">
+  <link rel="stylesheet" href="css/aquatic-theme.css?v=26">
   <script src="js/receipt-printer.js"></script>
   <script src="js/customer-notifier.js"></script>
   <script src="js/user-profile.js"></script>
@@ -18,12 +18,11 @@
   <!-- TOP HEADER BAR -->
   <header class="top-header-bar">
     <div class="top-bar-left">
-      <div class="brand-icon-box">🧺</div>
-      <div class="brand-text-block">
-        <div class="brand-title-row">
-          <span class="brand-name-text">LaundryEase</span>
-        </div>
-        <span class="brand-subtitle-text">Service Tracking and Profit Computation Platform</span>
+      <a href="index.html" title="Athena's Laundry Shop" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-dashboard">
+      </a>
+      <div class="brand-text-block" style="margin-left: 8px;">
+        <span class="brand-subtitle-text">Service Tracking & Profit Platform</span>
       </div>
     </div>
 
@@ -179,21 +178,23 @@
             Open Full Laundry Records Module →
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Order Code</th>
-              <th>Customer</th>
-              <th>Service</th>
-              <th>Weight / Cost</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="adminOverviewRecentTableBody">
-            <tr><td colspan="6" style="text-align:center; color: var(--text-muted);">Loading recent activity...</td></tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Order Code</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Weight / Cost</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminOverviewRecentTableBody">
+              <tr><td colspan="6" style="text-align:center; color: var(--text-muted);">Loading recent activity...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -250,23 +251,25 @@
           <button class="status-tab" data-status="Cancelled" onclick="filterByStatus('Cancelled')">Cancelled (<span id="countCancelled">0</span>)</button>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Order Code & Date</th>
-              <th>Customer</th>
-              <th>Services & Instruction</th>
-              <th>Weight & Cost</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="adminOrdersTableBody">
-            <tr>
-              <td colspan="6" style="text-align:center; color: var(--text-muted);">Loading laundry records...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Order Code & Date</th>
+                <th>Customer</th>
+                <th>Services & Instruction</th>
+                <th>Weight & Cost</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersTableBody">
+              <tr>
+                <td colspan="6" style="text-align:center; color: var(--text-muted);">Loading laundry records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -361,22 +364,24 @@
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Staff Name</th>
-              <th>Login Identifier</th>
-              <th>Phone / Contact</th>
-              <th>Role</th>
-              <th>Date Registered</th>
-            </tr>
-          </thead>
-          <tbody id="adminStaffTableBody">
-            <tr>
-              <td colspan="5" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading staff accounts...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Staff Name</th>
+                <th>Login Identifier</th>
+                <th>Phone / Contact</th>
+                <th>Role</th>
+                <th>Date Registered</th>
+              </tr>
+            </thead>
+            <tbody id="adminStaffTableBody">
+              <tr>
+                <td colspan="5" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading staff accounts...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -405,23 +410,25 @@
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Customer Name</th>
-              <th>Contact / Phone</th>
-              <th>Residence / Delivery Address</th>
-              <th>Total Orders</th>
-              <th>Date Registered</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="adminCustomersTableBody">
-            <tr>
-              <td colspan="6" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading customer directory...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Contact / Phone</th>
+                <th>Residence / Delivery Address</th>
+                <th>Total Orders</th>
+                <th>Date Registered</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminCustomersTableBody">
+              <tr>
+                <td colspan="6" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading customer directory...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -470,25 +477,27 @@
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Item Name</th>
-              <th>Category</th>
-              <th>Current Stock</th>
-              <th>Unit</th>
-              <th>Reorder Alert</th>
-              <th>Unit Cost</th>
-              <th>Status</th>
-              <th>Quick Stock Action</th>
-            </tr>
-          </thead>
-          <tbody id="adminInventoryTableBody">
-            <tr>
-              <td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading inventory records...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Current Stock</th>
+                <th>Unit</th>
+                <th>Reorder Alert</th>
+                <th>Unit Cost</th>
+                <th>Status</th>
+                <th>Quick Stock Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminInventoryTableBody">
+              <tr>
+                <td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">Loading inventory records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -562,7 +571,7 @@
             <div class="grid grid-cols-3 gap-3">
               <div>
                 <label class="block text-slate-300 font-semibold mb-1">🧺 Wash & Fold (₱/kg)</label>
-                <input type="number" step="0.5" id="settingRateWashFold" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-teal-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="35.00">
+                <input type="number" step="0.5" id="settingRateWashFold" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-teal-300 font-bold text-xs focus:outline-none focus:border-teal-500" value="25.00">
               </div>
               <div>
                 <label class="block text-slate-300 font-semibold mb-1">👗 Dry Clean (₱/pc)</label>
@@ -841,7 +850,7 @@
               <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 shadow-sm">
                 <div class="font-bold text-sm text-slate-100 font-heading flex items-center justify-between" id="summary-service-title">
                   <span>Wash & Fold</span>
-                  <span class="text-xs font-semibold text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded-full border border-teal-800" id="summary-unit-rate">₱35/kg</span>
+                  <span class="text-xs font-semibold text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded-full border border-teal-800" id="summary-unit-rate">₱25/kg</span>
                 </div>
                 <div class="text-xs text-slate-400 mt-0.5" id="summary-weight-display">8.0 kg (standard min)</div>
               </div>
@@ -849,7 +858,7 @@
               <div class="flex flex-col gap-1.5 text-xs text-slate-300 px-1">
                 <div class="flex justify-between items-center" id="sum-row-base">
                   <span>Base Wash & Fold</span>
-                  <span class="font-semibold text-slate-100" id="sum-val-base">₱280.00</span>
+                  <span class="font-semibold text-slate-100" id="sum-val-base">₱200.00</span>
                 </div>
 
                 <div class="flex justify-between items-center text-teal-400 font-medium" id="sum-row-student" style="display:none;">
@@ -867,7 +876,7 @@
             <div class="mt-4 pt-3 border-t border-slate-700">
               <div class="flex items-baseline justify-between mb-1">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400">TOTAL</span>
-                <span class="text-2xl font-extrabold font-heading text-teal-400" id="sum-grand-total">₱280.00</span>
+                <span class="text-2xl font-extrabold font-heading text-teal-400" id="sum-grand-total">₱200.00</span>
               </div>
               <div class="text-[10px] text-slate-400 text-right" id="sum-service-name">Wash & Fold • 8.0 kg</div>
             </div>
@@ -934,12 +943,12 @@
           </div>
           <div class="flex items-center justify-between text-slate-300">
             <span class="text-slate-400">Service Rate:</span>
-            <span class="font-semibold text-slate-200" id="modalServiceRate">₱35.00 / kg</span>
+            <span class="font-semibold text-slate-200" id="modalServiceRate">₱25.00 / kg</span>
           </div>
           <div class="border-t border-slate-800/80 my-1"></div>
           <div class="flex items-center justify-between text-slate-300">
             <span>Subtotal:</span>
-            <span class="font-semibold text-slate-200" id="modalSubtotal">₱227.50</span>
+            <span class="font-semibold text-slate-200" id="modalSubtotal">₱162.50</span>
           </div>
           <div class="flex items-center justify-between text-amber-400" id="modalDiscountRow">
             <span>Discount:</span>
@@ -947,7 +956,7 @@
           </div>
           <div class="flex items-center justify-between text-sm font-bold text-teal-300 pt-1.5 border-t border-slate-800">
             <span>Total Amount:</span>
-            <span class="text-base font-bold text-teal-400" id="modalTotalAmount">₱207.50</span>
+            <span class="text-base font-bold text-teal-400" id="modalTotalAmount">₱142.50</span>
           </div>
         </div>
 
@@ -1011,7 +1020,7 @@
             <div>
               <label class="block text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">Primary Laundry Service</label>
               <select id="editOrderServiceSelect" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 font-semibold text-xs focus:outline-none focus:border-teal-500" onchange="calculateEditOrderTotal()">
-                <option value="Wash & Fold" data-rate="35.00" data-unit="/ kg">🧺 Wash & Fold (₱35.00/kg)</option>
+                <option value="Wash & Fold" data-rate="25.00" data-unit="/ kg">🧺 Wash & Fold (₱25.00/kg)</option>
                 <option value="Dry Cleaning" data-rate="150.00" data-unit="/ pc">👗 Dry Cleaning (₱150.00/pc)</option>
                 <option value="Steam Press" data-rate="80.00" data-unit="/ pc">👔 Steam Press (₱80.00/pc)</option>
               </select>
@@ -1041,7 +1050,7 @@
           <div class="p-3.5 rounded-xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1.5 text-xs">
             <div class="flex items-center justify-between text-slate-400">
               <span>Service Rate:</span>
-              <span class="font-semibold text-slate-200" id="editOrderRateDisplay">₱35.00 / kg</span>
+              <span class="font-semibold text-slate-200" id="editOrderRateDisplay">₱25.00 / kg</span>
             </div>
             <div class="flex items-center justify-between text-slate-400">
               <span>Subtotal:</span>
@@ -1353,7 +1362,7 @@
     }
 
     const servicesList = [
-      { id: 'wash_fold', name: 'Wash & Fold', rate: 35, unit: '/kg', icon: '🧺' },
+      { id: 'wash_fold', name: 'Wash & Fold', rate: 25, unit: '/kg', icon: '🧺' },
       { id: 'dry_clean', name: 'Dry Cleaning', rate: 150, unit: '/pc', icon: '👗' },
       { id: 'steam_press', name: 'Steam Press', rate: 80, unit: '/pc', icon: '👔' }
     ];
@@ -1908,20 +1917,20 @@
             const statusBadge = getStatusBadgeHtml(order.order_status);
             return `
               <tr style="cursor: pointer;" onclick="openOrderDetailsModal(${order.id})">
-                <td><strong style="color:#ffffff;">${order.order_code}</strong></td>
-                <td><span style="color:#f0fdfa; font-weight:600;">${order.customer_name}</span></td>
+                <td><strong style="color:var(--text-main); font-weight:700;">${order.order_code}</strong></td>
+                <td><span style="color:var(--text-main); font-weight:600;">${order.customer_name}</span></td>
                 <td><span>${order.services_registered}</span></td>
                 <td><span>${parseFloat(order.weight_kg).toFixed(1)} kg (₱${parseFloat(order.total_price).toFixed(2)})</span></td>
                 <td>${statusBadge}</td>
                 <td onclick="event.stopPropagation();">
                   <div class="flex items-center gap-1.5">
-                    <button type="button" onclick="openOrderDetailsModal(${order.id})" title="View Order Summary" class="w-8 h-8 rounded-lg bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-white border border-teal-500/30 hover:border-teal-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="View Order">
+                    <button type="button" onclick="openOrderDetailsModal(${order.id})" title="View Order Summary" class="table-action-btn btn-action-view" aria-label="View Order">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
                     </button>
-                    <button type="button" onclick="openEditOrderModal(${order.id})" title="Edit Order Details" class="w-8 h-8 rounded-lg bg-sky-500/10 hover:bg-sky-500 text-sky-300 hover:text-white border border-sky-500/30 hover:border-sky-500 flex items-center justify-center transition-all cursor-pointer shadow-sm hover:scale-105" aria-label="Edit Order">
+                    <button type="button" onclick="openEditOrderModal(${order.id})" title="Edit Order Details" class="table-action-btn btn-action-edit" aria-label="Edit Order">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -2456,7 +2465,7 @@
       const weight = parseFloat(order.weight_kg) || 0;
       const totalPrice = parseFloat(order.total_price) || 0;
       
-      let rate = 35.00;
+      let rate = 25.00;
       let unit = '/ kg';
       if (order.services_registered && order.services_registered.includes('Dry Cleaning')) {
         rate = 150.00;
@@ -2584,7 +2593,7 @@
     function calculateEditOrderTotal() {
       const srvSelect = document.getElementById('editOrderServiceSelect');
       const opt = srvSelect.options[srvSelect.selectedIndex];
-      const rate = parseFloat(opt.getAttribute('data-rate')) || 35.00;
+      const rate = parseFloat(opt.getAttribute('data-rate')) || 25.00;
       const unit = opt.getAttribute('data-unit') || '/ kg';
 
       document.getElementById('editOrderUnitLabel').innerText = unit.replace('/ ', '');
@@ -2739,7 +2748,7 @@
           if (document.getElementById('settingStorePhone')) document.getElementById('settingStorePhone').value = d.store_phone || '';
           if (document.getElementById('settingStoreAddress')) document.getElementById('settingStoreAddress').value = d.store_address || '';
           if (document.getElementById('settingOperatingHours')) document.getElementById('settingOperatingHours').value = d.operating_hours || '';
-          if (document.getElementById('settingRateWashFold')) document.getElementById('settingRateWashFold').value = d.rate_wash_fold || '35.00';
+          if (document.getElementById('settingRateWashFold')) document.getElementById('settingRateWashFold').value = d.rate_wash_fold || '25.00';
           if (document.getElementById('settingRateDryClean')) document.getElementById('settingRateDryClean').value = d.rate_dry_clean || '150.00';
           if (document.getElementById('settingRateSteamPress')) document.getElementById('settingRateSteamPress').value = d.rate_steam_press || '80.00';
           if (document.getElementById('settingRateStudent')) document.getElementById('settingRateStudent').value = d.rate_student || '120.00';
@@ -2758,7 +2767,7 @@
         store_phone: document.getElementById('settingStorePhone')?.value.trim() || '',
         store_address: document.getElementById('settingStoreAddress')?.value.trim() || '',
         operating_hours: document.getElementById('settingOperatingHours')?.value.trim() || '',
-        rate_wash_fold: document.getElementById('settingRateWashFold')?.value || '35.00',
+        rate_wash_fold: document.getElementById('settingRateWashFold')?.value || '25.00',
         rate_dry_clean: document.getElementById('settingRateDryClean')?.value || '150.00',
         rate_steam_press: document.getElementById('settingRateSteamPress')?.value || '80.00',
         rate_student: document.getElementById('settingRateStudent')?.value || '120.00',

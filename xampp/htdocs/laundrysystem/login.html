@@ -3,80 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In & Register — LaundryEase Platform</title>
-  <meta name="description" content="Sign in or register to access the LaundryEase platform and track your laundry orders.">
+  <title>Sign In & Register — Athena's Laundry Shop</title>
+  <meta name="description" content="Sign in or register to access Athena's Laundry Shop and track your laundry orders in real-time.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/index.css?v=2">
-  <style>
-    .auth-page-wrapper {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 20px;
-      position: relative;
-      z-index: 1;
-    }
-    .auth-page-container {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    .back-home-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      transition: color 0.2s ease;
-    }
-    .back-home-link:hover {
-      color: #38bdf8;
-    }
-    .auth-brand-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css?v=25">
 </head>
-<body>
+<body class="auth-body-theme">
 
-  <!-- Ambient Glow Background -->
-  <div class="bg-glow-sphere-1"></div>
-  <div class="bg-glow-sphere-2"></div>
-  <div class="bg-grid-pattern"></div>
+  <!-- Floating Soap Bubbles Background -->
+  <div class="auth-bg-bubbles" aria-hidden="true">
+    <div class="auth-bubble auth-bubble-1"></div>
+    <div class="auth-bubble auth-bubble-2"></div>
+    <div class="auth-bubble auth-bubble-3"></div>
+    <div class="auth-bubble auth-bubble-4"></div>
+    <div class="auth-bubble auth-bubble-5"></div>
+  </div>
 
   <div class="auth-page-wrapper">
-    <div class="auth-page-container">
-      
-      <a href="index.html" class="back-home-link">
-        <span>←</span> Back to Homepage
-      </a>
+    
+    <!-- Top Left Corner Navigation Button -->
+    <a href="index.html" class="back-home-pill">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Homepage
+    </a>
 
-      <!-- Brand Header -->
-      <div class="auth-brand-header">
-        <a href="index.html" class="nav-brand" style="justify-content: center;">
-          <div class="brand-icon-box">🧺</div>
-          <div class="brand-text-wrap" style="text-align: left;">
-            <span class="brand-title">LaundryEase</span>
-            <span class="brand-tagline">Fabric Care & Tracking</span>
-          </div>
-        </a>
-      </div>
+    <div class="auth-page-container">
 
       <!-- Glassmorphic Auth Card -->
       <div class="auth-card">
         <div class="auth-card-glow"></div>
+
+        <!-- Brand Header with High-Definition Logo (Inside Container) -->
+        <div class="auth-brand-header">
+          <a href="index.html" class="brand-link" style="justify-content: center; text-decoration: none;" title="Athena's Laundry Shop Homepage">
+            <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="auth-logo-img">
+          </a>
+        </div>
 
         <!-- Success Overlay Notification -->
         <div id="successOverlay" class="success-overlay">
@@ -201,8 +165,8 @@
 
       </div>
 
-      <div style="text-align: center; margin-top: 24px; font-size: 0.78rem; color: var(--text-muted);">
-        &copy; 2026 LaundryEase Platform. All rights reserved.
+      <div class="auth-footer-note">
+        &copy; 2026 Athena's Laundry Shop. All rights reserved.
       </div>
 
     </div>
@@ -244,7 +208,12 @@
     async function executeUnifiedAuth(event) {
       event.preventDefault();
       const isRegister = document.getElementById('registerViewState').classList.contains('is-visible');
-      const endpoint   = isRegister ? 'api/register.php' : 'api/login.php';
+      const apiFile    = isRegister ? 'api/register.php' : 'api/login.php';
+
+      // Detect if user opened the page via VS Code Live Server (port 5500) or file:// protocol
+      const isLiveServer = (window.location.port === '5500' || window.location.port === '5501' || window.location.protocol === 'file:' || !window.location.pathname.includes('/laundrysystem/'));
+      const apiBase      = isLiveServer ? 'http://localhost/laundrysystem/' : '';
+      const endpoint     = apiBase + apiFile;
 
       const payload = isRegister ? {
         fullName: document.getElementById('regFullName').value.trim(),
@@ -264,13 +233,33 @@
       }
 
       try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        let response;
+        try {
+          response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (netErr) {
+          // If relative fetch failed, try localhost backend
+          if (!apiBase) {
+            response = await fetch('http://localhost/laundrysystem/' + apiFile, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+          } else {
+            throw new Error("Unable to connect to the PHP backend at http://localhost/laundrysystem/. Please ensure Apache and MySQL are running in your XAMPP Control Panel.");
+          }
+        }
 
-        const data = await response.json();
+        const rawText = await response.text();
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (jsonErr) {
+          throw new Error("Invalid response from server. Please ensure you access the app via Apache: http://localhost/laundrysystem/login.html");
+        }
 
         if (!response.ok) {
           alert(data.message || 'Authentication error.');
@@ -296,12 +285,17 @@
         if (overlay) overlay.classList.add('is-active');
 
         setTimeout(() => {
-          window.location.href = data.destination || 'customer_dashboard.php';
+          let dest = data.destination || 'customer_dashboard.php';
+          // If running on Live Server, redirect to Apache host so PHP dashboards run
+          if (isLiveServer) {
+            dest = 'http://localhost/laundrysystem/' + dest;
+          }
+          window.location.href = dest;
         }, 1000);
 
       } catch (err) {
         console.error(err);
-        alert('Server communication error. Please check your connection.');
+        alert(err.message || 'Server communication error. Please check that Apache and MySQL are running in XAMPP.');
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalBtnText;

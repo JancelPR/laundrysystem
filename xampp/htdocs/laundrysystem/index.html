@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaundryEase — Your Laundry Picked Up Today. Back Tomorrow.</title>
-  <meta name="description" content="We collect, clean and deliver your clothes back in 24 hours. Premium wash & fold, eco dry cleaning, steam pressing with real-time order tracking.">
+  <title>Athena's Laundry Shop — Fresh, Clean & Ready for You</title>
+  <meta name="description" content="Athena's Laundry Shop — Professional wash & fold, eco dry cleaning, and steam pressing with real-time order tracking in Taculing, Bacolod City.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/index.css?v=11">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css?v=21">
 </head>
 <body>
 
@@ -20,9 +20,8 @@
       <nav class="nav-wrapper">
         
         <!-- Logo -->
-        <a href="#hero" class="brand-link">
-          <div class="brand-icon">🧺</div>
-          <span class="brand-name">Laundry<span>Ease</span></span>
+        <a href="#hero" class="brand-link" aria-label="Athena's Laundry Shop Home">
+          <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-img">
         </a>
 
         <!-- Nav Links -->
@@ -45,134 +44,112 @@
     </div>
   </header>
 
-  <section class="hero-section" id="hero">
-    <!-- Full-Bleed Seamless Blending Hero Backdrop -->
+  <section class="hero-section fresh-hero-theme" id="hero">
+    <!-- Full-Bleed Mascot & Bubbles Backdrop -->
     <div class="hero-fullbleed-backdrop" aria-hidden="true">
-      <img src="hero_banner.jpg" alt="" class="hero-fullbleed-img">
+      <img src="hero_banner.jpg" alt="Athena's Laundry Shop Mascot" class="hero-fullbleed-img">
       <div class="hero-blend-overlay"></div>
     </div>
 
     <div class="site-container">
       <div class="hero-grid">
         
-        <!-- HERO LEFT -->
+        <!-- HERO LEFT: Reference UI Content -->
         <div class="hero-left">
           
-          <div class="location-tag">
-            <span>📍 Serving</span> Taculing & Nearby Areas
+          <!-- Top Pill Badge -->
+          <div class="fresh-hero-badge">
+            <span class="badge-icon">❄️</span>
+            <span class="badge-text">Clean Clothes, Happy Life</span>
           </div>
 
-          <h1 class="hero-heading">
-            Your laundry, <br>
-            <span class="highlight">tracked perfectly.</span>
+          <!-- Main Dual-Tone Headline -->
+          <h1 class="fresh-hero-title">
+            Fresh, Clean <br>
+            <span class="title-accent">& Ready for You</span>
           </h1>
 
-          <p class="hero-subtext">
-            Smart, seamless fabric care with real-time tracking from store drop-off to pickup.
+          <!-- Subtitle Paragraph -->
+          <p class="fresh-hero-subtitle">
+            We provide fast, reliable, and affordable laundry services that keep you looking and feeling your best.
           </p>
 
-          <!-- Interactive Schedule & Intake Card -->
-          <div class="intake-card">
-            
-            <!-- Store Intake & Estimated Pickup Tiles -->
-            <div class="schedule-tiles-row">
-              <div class="schedule-tile">
-                <div class="schedule-tile-icon">🏪</div>
-                <div>
-                  <div class="schedule-tile-label">Store Hours</div>
-                  <div class="schedule-tile-val">7:00 AM - 8:00 PM</div>
-                  <div class="schedule-tile-sub">Daily Walk-in</div>
-                </div>
-              </div>
-
-              <div class="schedule-tile">
-                <div class="schedule-tile-icon">⚡</div>
-                <div>
-                  <div class="schedule-tile-label">Estimated Turnaround</div>
-                  <div class="schedule-tile-val">Same-Day / 24h</div>
-                  <div class="schedule-tile-sub">Express & Standard</div>
-                </div>
-              </div>
+          <!-- Dual Pill Action Buttons + Sleek Order Tracking -->
+          <div class="fresh-hero-actions">
+            <div class="fresh-btn-row">
+              <a href="#pricing" class="btn-fresh-primary">
+                <span class="btn-icon">🧺</span>
+                <span>Our Services</span>
+              </a>
+              <a href="#contact" class="btn-fresh-secondary">
+                <span class="btn-icon">📍</span>
+                <span>Navigate Us</span>
+              </a>
             </div>
 
-            <!-- Service Select & Search Action Box -->
-            <div class="intake-form-box">
-              <div class="service-select-wrap">
-                <select id="heroServiceSelect" aria-label="Select Laundry Service">
-                  <option value="Wash & Fold">🧺 Wash & Fold (₱35.00 / kg)</option>
-                  <option value="Dry Cleaning">👗 Dry Cleaning (₱150.00 / pc)</option>
-                  <option value="Steam Press">👔 Steam Press (₱80.00 / pc)</option>
-                  <option value="Express Rush">⚡ Express Rush (+₱50.00)</option>
-                </select>
-              </div>
-
-              <div class="intake-input-action-row">
-                <div class="intake-input-wrap">
-                  <span class="input-icon">🔍</span>
-                  <input type="text" id="heroLocationInput" placeholder="Enter Order Code (e.g. ORD-1001) or Phone..." aria-label="Enter Order Code or Mobile Number" onkeydown="if(event.key==='Enter') trackPublicOrder()">
-                </div>
-                <button type="button" class="btn-check-availability" id="heroTrackBtn" onclick="trackPublicOrder()">
-                  Track Order
-                </button>
-              </div>
+            <!-- Integrated Glass Tracking Capsule -->
+            <div class="fresh-track-capsule">
+              <span class="track-icon">🔍</span>
+              <input type="text" id="heroLocationInput" placeholder="Quick Track: Enter Order Code or Mobile..." aria-label="Enter Order Code or Mobile Number" onkeydown="if(event.key==='Enter') trackPublicOrder()">
+              <button type="button" class="btn-track-submit" id="heroTrackBtn" onclick="trackPublicOrder()">
+                Track Order
+              </button>
             </div>
-
-            <div class="intake-reassurance">
-              <span class="check-icon">✓</span>
-              <span>Instant digital claim receipt & real-time order tracking.</span>
-            </div>
-
           </div>
 
         </div>
 
-        <!-- HERO RIGHT: Floating Step Badge -->
-        <div class="hero-right">
-          
-          <!-- Floating Overlaid 3-Step Summary Card -->
-          <div class="floating-steps-card">
-            
-            <div class="floating-step-item">
-              <div class="floating-step-icon">📥</div>
-              <div class="floating-step-text">
-                <span class="floating-step-title">Drop-off</span>
-                <span class="floating-step-desc">Quick weigh-in & claim receipt.</span>
-              </div>
-            </div>
-
-            <div class="floating-step-item">
-              <div class="floating-step-icon">🧼</div>
-              <div class="floating-step-text">
-                <span class="floating-step-title">We clean</span>
-                <span class="floating-step-desc">Expert care for all your clothes.</span>
-              </div>
-            </div>
-
-            <div class="floating-step-item">
-              <div class="floating-step-icon">🧺</div>
-              <div class="floating-step-text">
-                <span class="floating-step-title">Pick up</span>
-                <span class="floating-step-desc">Fresh, clean clothes ready on time.</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
+        <!-- HERO RIGHT: Open area displaying the Mascot -->
+        <div class="hero-right" aria-hidden="true"></div>
 
       </div>
 
-      <!-- Trust Bar -->
-      <div class="hero-trust-bar">
-        <div class="trust-item">
-          <span class="star-rating">★★★★★</span>
-          <span>4.9 out of 5</span>
+      <!-- Floating 4-Column Feature Bar (from reference image) -->
+      <div class="fresh-features-card">
+        <div class="fresh-feature-item">
+          <div class="feature-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div class="feature-info">
+            <h4 class="feature-heading">Fast Service</h4>
+            <p class="feature-caption">Quick turnaround time</p>
+          </div>
         </div>
-        <div class="trust-item">
-          <span>🧺 25,000+ happy laundry orders</span>
+
+        <div class="feature-card-divider"></div>
+
+        <div class="fresh-feature-item">
+          <div class="feature-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div class="feature-info">
+            <h4 class="feature-heading">Quality Care</h4>
+            <p class="feature-caption">Your clothes are safe with us</p>
+          </div>
         </div>
-        <div class="trust-item">
-          <span>🛡️ Trusted & Verified Clean Guarantee</span>
+
+        <div class="feature-card-divider"></div>
+
+        <div class="fresh-feature-item">
+          <div class="feature-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          </div>
+          <div class="feature-info">
+            <h4 class="feature-heading">Affordable Price</h4>
+            <p class="feature-caption">₱25/kg reasonable rates</p>
+          </div>
+        </div>
+
+        <div class="feature-card-divider"></div>
+
+        <div class="fresh-feature-item">
+          <div class="feature-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+          </div>
+          <div class="feature-info">
+            <h4 class="feature-heading">Eco Friendly</h4>
+            <p class="feature-caption">We care for your clothes & nature</p>
+          </div>
         </div>
       </div>
 
@@ -187,7 +164,7 @@
       
       <div class="section-head">
         <span class="section-badge">Simple 3-Step Process</span>
-        <h2 class="section-main-title">How LaundryEase Works</h2>
+        <h2 class="section-main-title">How Athena's Works</h2>
         <p class="section-description">Effortless laundry in three simple steps, designed to give you your precious time back.</p>
       </div>
 
@@ -242,7 +219,7 @@
           
           <div class="card-price-row">
             <span class="price-currency">₱</span>
-            <span class="price-num">35.00</span>
+            <span class="price-num">25.00</span>
             <span class="price-unit">/ kilogram</span>
           </div>
 
@@ -319,7 +296,7 @@
       
       <div class="section-head">
         <span class="section-badge">Quality Guarantee</span>
-        <h2 class="section-main-title">Why Choose LaundryEase?</h2>
+        <h2 class="section-main-title">Why Choose Athena's?</h2>
         <p class="section-description">Combining state-of-the-art washing tech with dedicated garment care.</p>
       </div>
 
@@ -357,9 +334,8 @@
       <div class="footer-columns-grid">
         
         <div class="footer-brand">
-          <a href="#hero" class="brand-link" style="color: #ffffff;">
-            <div class="brand-icon">🧺</div>
-            <span class="brand-name" style="color: #ffffff;">Laundry<span>Ease</span></span>
+          <a href="#hero" class="brand-link" aria-label="Athena's Laundry Shop Home">
+            <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-img footer-logo-img">
           </a>
           <p>Your premier on-demand laundry and dry cleaning partner. Fresh, clean, and delivered in 24 hours.</p>
         </div>
@@ -390,14 +366,14 @@
             <li>🕒 Mon - Sun: 7:00 AM - 8:00 PM</li>
             <li>📱 Hotline: 0917-123-4567</li>
             <li>📍 Taculing, Bacolod City</li>
-            <li>✉️ support@laundryease.ph</li>
+            <li>✉️ support@athenaslaundry.ph</li>
           </ul>
         </div>
 
       </div>
 
       <div class="footer-bottom-bar">
-        <span>&copy; 2026 LaundryEase Platform. All rights reserved.</span>
+        <span>&copy; 2026 Athena's Laundry Shop. All rights reserved.</span>
         <span>Fresh & clean clothes ready on time.</span>
       </div>
 

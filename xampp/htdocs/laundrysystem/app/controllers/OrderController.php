@@ -106,7 +106,7 @@ class OrderController {
         
         $servicesRegistered = implode(', ', $servicesList);
         $weightKg = isset($data['weightKg']) ? (float)$data['weightKg'] : 8.0;
-        $totalPrice = isset($data['totalPrice']) ? (float)$data['totalPrice'] : 280.00;
+        $totalPrice = isset($data['totalPrice']) ? (float)$data['totalPrice'] : 200.00;
         $specialInstructions = isset($data['specialInstructions']) ? trim($data['specialInstructions']) : '';
         $paymentStatus = isset($data['paymentStatus']) ? trim($data['paymentStatus']) : 'Unpaid';
         $orderStatus = 'Pending';
