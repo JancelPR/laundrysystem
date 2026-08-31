@@ -19,7 +19,7 @@
   <header class="top-header-bar">
     <div class="top-bar-left">
       <a href="index.html" title="Athena's Laundry Shop" style="display: flex; align-items: center; text-decoration: none;">
-        <img src="athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-dashboard">
+        <img src="images/athena_logo_hd.png" alt="Athena's Laundry Shop" class="brand-logo-dashboard">
       </a>
       <div class="brand-text-block" style="margin-left: 8px;">
         <span class="brand-subtitle-text">Staff Operations & Order Processing</span>
