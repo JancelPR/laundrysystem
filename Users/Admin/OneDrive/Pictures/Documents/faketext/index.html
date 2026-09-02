@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fake Text - Google Messages Replica</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="top-nav-bar">
+    <div class="nav-title">
+      <img src="favicon.svg" alt="Studio Logo" class="nav-logo-img" width="26" height="26">
+      <span>Android Mockup Studio</span>
+    </div>
+    <div class="nav-links">
+      <a href="#sms-division" class="nav-link active">💬 Messages Generator</a>
+      <a href="#call-logs-division" class="nav-link call-link">📞 Call Logs Editor</a>
+    </div>
+  </div>
+
+  <main class="main-workspace">
+  <div class="app-layout active-division" id="sms-division">
+    <!-- Controls Sidebar / Toolbar for customization & download -->
+    <div class="control-panel">
+      <div class="panel-header">
+        <h2>SMS Generator</h2>
+        <span class="badge">Pixel Perfect</span>
+      </div>
+
+      <div class="panel-section">
+        <h3>Conversation Details</h3>
+        <label>
+          Sender / Phone Number
+          <input type="text" id="input-phone" value="0921 358 2262">
+        </label>
+        <label>
+          Carrier / SIM Name
+          <select id="select-carrier">
+            <option value="DITO" selected>DITO</option>
+            <option value="GLOBE">GLOBE</option>
+            <option value="TM">TM</option>
+            <option value="SMART">SMART</option>
+            <option value="TNT">TNT</option>
+            <option value="CUSTOM">Custom...</option>
+          </select>
+          <input type="text" id="input-carrier" value="" style="display: none; margin-top: 6px;" placeholder="Enter custom carrier...">
+        </label>
+        <label>
+          Status Bar Time (1-12 Hours)
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <select id="select-status-hour" style="flex: 1;" title="Hour (1-12)">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11" selected>11</option>
+              <option value="12">12</option>
+            </select>
+            <span style="font-weight: 700; color: #94a3b8;">:</span>
+            <select id="select-status-minute" style="flex: 1;" title="Minute (00-59)"></select>
+            <button type="button" id="btn-open-time-picker" class="btn outline" style="padding: 7px 10px; font-size: 0.8rem; white-space: nowrap;" title="Open Scroll Wheel Picker">🕒 Wheel</button>
+            <button type="button" id="btn-sms-now" class="btn outline" style="padding: 7px 10px; font-size: 0.78rem; white-space: nowrap;" title="Set to current device time">⏰ Now</button>
+          </div>
+          <input type="hidden" id="input-status-time" value="11:12">
+        </label>
+        <label class="checkbox-row" style="margin-top: 4px; margin-bottom: 12px;">
+          <input type="checkbox" id="check-realtime-clock" checked>
+          <span>Live Real-Time Clock (Auto-update)</span>
+        </label>
+        <label>
+          Battery %
+          <input type="number" id="input-battery" value="54" min="1" max="100">
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h3>Typography & Font</h3>
+        <label>
+          Font Family
+          <select id="select-font-family">
+            <option value="'Roboto', sans-serif" selected>Roboto (Android Standard)</option>
+            <option value="'Inter', -apple-system, BlinkMacSystemFont, sans-serif">Inter (Modern Clean)</option>
+            <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Rounded Neo-grotesque)</option>
+            <option value="'Open Sans', sans-serif">Open Sans</option>
+            <option value="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">System UI (Native Device)</option>
+          </select>
+        </label>
+        <label>
+          Bubble Font Size (px)
+          <input type="number" id="input-font-size" value="15" min="12" max="22" step="0.5">
+        </label>
+        <label>
+          Font Weight
+          <select id="select-font-weight">
+            <option value="300">300 (Light)</option>
+            <option value="400" selected>400 (Regular - Default)</option>
+            <option value="500">500 (Medium)</option>
+            <option value="600">600 (Semi-Bold)</option>
+          </select>
+        </label>
+        <label>
+          Letter Spacing (px)
+          <input type="number" id="input-letter-spacing" value="0" min="-1" max="2" step="0.1">
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h3>Timestamps & Date</h3>
+        <label>
+          Day Preset
+          <select id="select-day-preset">
+            <option value="Yesterday" selected>Yesterday</option>
+            <option value="Today">Today</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+            <option value="custom">Specific Day / Custom Date...</option>
+          </select>
+        </label>
+        <label id="wrapper-custom-day" style="display: none;">
+          Specific Day / Date
+          <input type="text" id="input-custom-day" placeholder="e.g. Aug 16, 2026 or Sun, Aug 16">
+        </label>
+        <label>
+          Select Timestamp / Divider
+          <select id="select-timestamp-divider">
+            <option value="0">1st Timestamp (9:38 AM)</option>
+            <option value="1">2nd Timestamp (2:13 PM)</option>
+          </select>
+        </label>
+        <label>
+          Timestamp Time
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <select id="select-timestamp-hour" style="flex: 1;" title="Hour (1-12)">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9" selected>9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+            <span style="font-weight: 700; color: #94a3b8;">:</span>
+            <select id="select-timestamp-minute" style="flex: 1;" title="Minute (00-59)"></select>
+            <select id="select-timestamp-ampm" style="width: 72px;" title="Period (AM/PM)">
+              <option value="AM" selected>AM</option>
+              <option value="PM">PM</option>
+            </select>
+            <button type="button" id="btn-timestamp-wheel" class="btn outline" style="padding: 7px 10px; font-size: 0.8rem; white-space: nowrap;" title="Open Scroll Wheel Picker">🕒 Wheel</button>
+            <button type="button" id="btn-timestamp-now" class="btn outline" style="padding: 7px 10px; font-size: 0.78rem; white-space: nowrap;" title="Set to current device time">⏰ Now</button>
+          </div>
+          <input type="hidden" id="input-timestamp-time" value="9:38 AM">
+        </label>
+        <div class="button-group" style="margin-top: 6px; flex-direction: row; gap: 6px;">
+          <button id="btn-add-timestamp" class="btn outline" style="flex: 1;">+ Insert Divider</button>
+          <button id="btn-remove-timestamp" class="btn outline" style="flex: 1;">− Remove Divider</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>Add New Message</h3>
+        <textarea id="new-msg-text" placeholder="Type a message..."></textarea>
+        <div class="button-group">
+          <button id="btn-add-received" class="btn outline">Add Incoming (Grey)</button>
+          <button id="btn-add-sent" class="btn primary">Add Outgoing (Lavender)</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>Display Options</h3>
+        <label class="checkbox-row">
+          <input type="checkbox" id="check-sms-bottom-nav" checked>
+          <span>Show Android 3-Button Nav Bar</span>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h3>Quick Actions</h3>
+        <div class="button-group">
+          <button id="btn-reset" class="btn secondary">Reset to Image</button>
+          <button id="btn-toggle-edit" class="btn secondary">Toggle In-line Edit</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>Avatar Profile</h3>
+        <label class="avatar-field-label">Preset Colors</label>
+        <div class="avatar-swatches" id="avatar-swatches"></div>
+
+        <div class="avatar-custom-controls">
+          <label class="avatar-color-input-wrapper">
+            <span>Custom Color</span>
+            <div class="color-picker-box">
+              <input type="color" id="input-avatar-color" value="#fa508f">
+              <span class="avatar-hex-badge" id="avatar-hex-badge">#FA508F</span>
+            </div>
+          </label>
+          <button type="button" id="btn-random-avatar" class="btn outline random-btn" title="Generate random avatar color">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+            Random
+          </button>
+        </div>
+
+        <div class="avatar-icon-option">
+          <span class="sub-label">Icon Silhouette</span>
+          <div class="pill-toggle-group">
+            <button type="button" class="pill-toggle-btn active" id="btn-icon-white" data-icon-color="#ffffff">White</button>
+            <button type="button" class="pill-toggle-btn" id="btn-icon-dark" data-icon-color="#201f24">Dark</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>Export</h3>
+        <div class="button-group">
+          <button id="btn-download" class="btn download-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Screenshot (1080×2340 HD)
+          </button>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p>💡 <strong>Interactive:</strong> You can click directly on any message, time, date, or text on the phone screen to edit it in real-time!</p>
+      </div>
+    </div>
+
+    <!-- Phone Container (Exact replica of image) -->
+    <div class="phone-wrapper">
+      <div class="phone-screen" id="phone-screen">
+        
+        <!-- Top Status Bar -->
+        <div class="status-bar">
+          <div class="status-left">
+            <span class="status-time" id="status-time-val" contenteditable="true">11:12</span>
+          </div>
+          <div class="status-right">
+            <span class="net-speed">1.12<br><span class="speed-unit">KB/S</span></span>
+            <div class="volte-badge">
+              <span class="volte-text">VoLTE</span>
+            </div>
+            <!-- Dual SIM Signal Bars -->
+            <div class="sim-signals">
+              <svg class="signal-icon" viewBox="0 0 16 14" width="15" height="13">
+                <rect x="1" y="10" width="2" height="3" fill="#ffffff" rx="0.5"/>
+                <rect x="4.5" y="7.5" width="2" height="5.5" fill="#ffffff" rx="0.5"/>
+                <rect x="8" y="5" width="2" height="8" fill="#ffffff" rx="0.5"/>
+                <rect x="11.5" y="2" width="2" height="11" fill="#ffffff" rx="0.5"/>
+              </svg>
+              <span class="sim-sub">2</span>
+              <svg class="signal-icon" viewBox="0 0 16 14" width="15" height="13">
+                <rect x="1" y="10" width="2" height="3" fill="#ffffff" rx="0.5"/>
+                <rect x="4.5" y="7.5" width="2" height="5.5" fill="#ffffff" rx="0.5"/>
+                <rect x="8" y="5" width="2" height="8" fill="#ffffff" rx="0.5"/>
+                <rect x="11.5" y="2" width="2" height="11" fill="#ffffff" rx="0.5"/>
+              </svg>
+            </div>
+            <!-- Battery Indicator -->
+            <div class="battery-pill">
+              <span class="battery-val" id="battery-val" contenteditable="true">54</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <div class="header-left">
+            <button class="icon-btn back-btn" aria-label="Back">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <div class="avatar-circle" id="avatar-circle" title="Click to randomize avatar color" role="button" tabindex="0">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="var(--avatar-icon, #ffffff)" id="avatar-icon-svg">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div class="contact-info">
+              <span class="contact-number" id="header-phone-val" contenteditable="true">0921 358 2262</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn call-btn" aria-label="Call">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-2.2 2.2a15.053 15.053 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.01A11.36 11.36 0 0 1 8.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-1-.99-1.12z"/>
+              </svg>
+            </button>
+            <button class="icon-btn menu-btn" aria-label="More options">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Conversation Area (Rounded Black Card) -->
+        <div class="chat-body-card">
+          
+          <!-- Side Edge Panel Handle (from reference screenshot) -->
+          <div class="edge-panel-handle"></div>
+
+          <div class="chat-messages" id="chat-messages">
+            
+            <!-- Timestamp 1 -->
+            <div class="timestamp-center" id="timestamp-1" contenteditable="true">Yesterday • 9:38 AM</div>
+
+            <!-- SMS Info details -->
+            <div class="info-text-block">
+              <div class="info-line" contenteditable="true">Texting with&nbsp;<span id="info-phone-val">0921 358 2262</span>&nbsp;(SMS/MMS)</div>
+              <div class="info-line-sub">
+                Sending with&nbsp;<u id="info-carrier-val" contenteditable="true">DITO</u>
+              </div>
+            </div>
+
+            <!-- Outgoing Message (Sender - Lavender/Soft Purple) -->
+            <div class="message-row sent-row">
+              <div class="msg-action-toolbar" data-html2canvas-ignore="true">
+                <button class="msg-action-btn edit-msg-btn" title="Edit message" aria-label="Edit">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                </button>
+                <button class="msg-action-btn delete-msg-btn" title="Delete message" aria-label="Delete">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="bubble sent-bubble" contenteditable="true">Input you text here</div>
+            </div>
+
+            <!-- Timestamp 2 -->
+            <div class="timestamp-center" id="timestamp-2" contenteditable="true">Yesterday • 2:13 PM</div>
+
+            <!-- Incoming Message (Recipient - Dark Gray) -->
+            <div class="message-row received-row">
+              <div class="msg-action-toolbar" data-html2canvas-ignore="true">
+                <button class="msg-action-btn edit-msg-btn" title="Edit message" aria-label="Edit">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                </button>
+                <button class="msg-action-btn delete-msg-btn" title="Delete message" aria-label="Delete">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="bubble received-bubble" contenteditable="true">Input your message here</div>
+            </div>
+
+          </div>
+
+          <!-- Smart Reply / Suggested Chips -->
+          <div class="suggestion-chips-container">
+            <div class="suggestion-chips-scroll">
+              <button class="chip" contenteditable="true">Okay, thanks</button>
+              <button class="chip" contenteditable="true">Thanks 😊</button>
+              <button class="chip emoji-chip" contenteditable="true">😊</button>
+              <button class="chip emoji-chip" contenteditable="true">👍</button>
+            </div>
+          </div>
+
+          <!-- Message Input Bar -->
+          <div class="bottom-input-section">
+            <div class="input-pill">
+              <button class="input-action-btn plus-circle-btn" aria-label="Add attachment">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="16"/>
+                  <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+              </button>
+
+              <div class="input-field-wrapper">
+                <span class="input-carrier-prefix" id="input-carrier-prefix">DITO</span>
+                <span class="input-dot">•</span>
+                <input type="text" class="msg-input" placeholder="Text message" id="chat-input-field">
+              </div>
+
+              <button class="input-action-btn emoji-btn" aria-label="Insert emoji">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                  <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                  <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+              </button>
+
+              <button class="input-action-btn gallery-btn" aria-label="Attach gallery image">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Mic / Voice FAB Button -->
+            <button class="mic-fab-btn" id="mic-send-btn" aria-label="Voice Message or Send">
+              <svg class="waveform-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <rect x="4" y="9" width="2" height="6" rx="1"/>
+                <rect x="8" y="6" width="2" height="12" rx="1"/>
+                <rect x="12" y="3" width="2" height="18" rx="1"/>
+                <rect x="16" y="6" width="2" height="12" rx="1"/>
+                <rect x="20" y="9" width="2" height="6" rx="1"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Android 3-Button Navigation Bar -->
+          <div class="android-nav-bar" id="sms-android-nav-bar">
+            <button class="nav-key recents-key" aria-label="Recent apps">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="4" y1="7" x2="20" y2="7"/>
+                <line x1="4" y1="12" x2="20" y2="12"/>
+                <line x1="4" y1="17" x2="20" y2="17"/>
+              </svg>
+            </button>
+            <button class="nav-key home-key" aria-label="Home">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+            </button>
+            <button class="nav-key back-key" aria-label="Back">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 6L8 12L14 18"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 2 (BOTTOM): CALL LOGS EDITOR         -->
+  <!-- ============================================ -->
+  <div class="division-divider">
+    <div class="divider-line"></div>
+    <span class="divider-label">⬇ CALL LOGS EDITOR (BELOW) ⬇</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="app-layout" id="call-logs-division">
+    <!-- Call Logs Control Panel -->
+    <div class="control-panel">
+      <div class="panel-header">
+        <h2>Call Logs Editor</h2>
+        <span class="badge" style="background: rgba(34, 197, 94, 0.18); color: #4ade80; border-color: rgba(74, 222, 128, 0.3);">Phone Replica</span>
+      </div>
+
+      <div class="panel-section">
+        <h3>Contact Details</h3>
+        <label>
+          Sender / Phone Number
+          <input type="text" id="input-call-phone" value="+63 956 825 5857">
+        </label>
+        <label>
+          Country / Subtitle
+          <input type="text" id="input-call-location" value="Philippines">
+        </label>
+        <label>
+          Carrier / SIM Name
+          <select id="select-call-carrier">
+            <option value="DITO" selected>DITO</option>
+            <option value="GLOBE">GLOBE</option>
+            <option value="TM">TM</option>
+            <option value="SMART">SMART</option>
+            <option value="TNT">TNT</option>
+            <option value="CUSTOM">Custom...</option>
+          </select>
+          <input type="text" id="input-call-carrier" value="" style="display: none; margin-top: 6px;" placeholder="Enter custom carrier...">
+        </label>
+        <label>
+          Section Header (Group Label)
+          <select id="select-call-section-title">
+            <option value="Today" selected>Today</option>
+            <option value="Older">Older</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h3>Status Bar (Shared / Synced)</h3>
+        <label>
+          Status Bar Time (1-12 Hours)
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <select id="select-call-status-hour" style="flex: 1;" title="Hour (1-12)">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11" selected>11</option>
+              <option value="12">12</option>
+            </select>
+            <span style="font-weight: 700; color: #94a3b8;">:</span>
+            <select id="select-call-status-minute" style="flex: 1;" title="Minute (00-59)"></select>
+            <button type="button" id="btn-call-open-time-picker" class="btn outline" style="padding: 7px 10px; font-size: 0.8rem; white-space: nowrap;" title="Open Scroll Wheel Picker">🕒 Wheel</button>
+            <button type="button" id="btn-call-now" class="btn outline" style="padding: 7px 10px; font-size: 0.78rem; white-space: nowrap;" title="Set to current device time">⏰ Now</button>
+          </div>
+          <input type="hidden" id="input-call-status-time" value="11:12">
+        </label>
+        <label class="checkbox-row" style="margin-top: 4px; margin-bottom: 12px;">
+          <input type="checkbox" id="check-call-realtime-clock" checked>
+          <span>Live Real-Time Clock (Auto-update)</span>
+        </label>
+        <label>
+          Battery %
+          <input type="number" id="input-call-battery" value="21" min="1" max="100">
+        </label>
+        <label>
+          Network Speed
+          <input type="text" id="input-call-net-speed" value="9.14">
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="check-call-chat-icon" checked>
+          <span>Show Chat / App Icon on Left</span>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <!-- Divider line above Call Layers text -->
+        <hr class="panel-sub-divider" style="margin-bottom: 18px;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="margin-bottom: 0;">Call Layers</h3>
+          <span class="badge" id="call-layer-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(74, 222, 128, 0.3);">1 Layer</span>
+        </div>
+
+        <label id="label-new-call-section">
+          Section for New Layer
+          <select id="select-new-call-section">
+            <option value="today" selected>Today</option>
+            <option value="older">Older</option>
+          </select>
+        </label>
+
+        <label>
+          Call Type / Direction
+          <select id="select-call-type">
+            <option value="outgoing" selected>Outgoing call (↗)</option>
+            <option value="incoming">Incoming call (↙)</option>
+            <option value="missed">Missed call (↙ Red)</option>
+            <option value="cancelled">Cancelled call (✕)</option>
+          </select>
+        </label>
+        <label>
+          Date & Time
+          <input type="text" id="input-new-call-time" value="12:20 PM">
+        </label>
+        <label>
+          Duration (e.g. 60 → 1m, 61 → 1m 1s, >1h omits seconds)
+          <span id="duration-preview-badge" style="color: #4ade80; font-size: 0.8rem; font-weight: 600; float: right;"></span>
+          <input type="text" id="input-new-call-duration" placeholder="e.g. 32, 60, 61, or 2h 46m" value="">
+          <span id="duration-field-error" style="display: none; color: #f87171; font-size: 0.78rem; margin-top: 4px; font-weight: 500;">⚠️ Letters & special characters not allowed</span>
+        </label>
+        <label class="checkbox-row" style="margin-bottom: 14px;">
+          <input type="checkbox" id="check-new-call-hd">
+          <span>HD Voice Badge ([HD])</span>
+        </label>
+
+        <!-- Add and Remove Layer Buttons below duration input field -->
+        <div class="button-group" style="flex-direction: row; gap: 8px; margin-top: 12px; margin-bottom: 18px;">
+          <button type="button" id="btn-add-layer" class="btn primary" style="flex: 1;">+ Add Layer</button>
+          <button type="button" id="btn-remove-layer" class="btn outline" style="flex: 1;" title="Remove the last layer (minimum 1 required)">− Remove Layer</button>
+        </div>
+
+        <!-- Divider line at the bottom of the add layer button -->
+        <hr class="panel-sub-divider">
+      </div>
+
+      <div class="panel-section">
+        <h3>Display Options</h3>
+        <label class="checkbox-row">
+          <input type="checkbox" id="check-show-video-call" checked>
+          <span>Show Video Call Button</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="check-call-bottom-nav">
+          <span>Show Android 3-Button Nav Bar</span>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h3>Quick Presets</h3>
+        <div class="button-group">
+          <button type="button" id="btn-call-preset-image-latest" class="btn secondary" style="border-color: #56c073; color: #56c073; font-weight: 600;">Preset: Latest Reference (8:46)</button>
+          <button type="button" id="btn-call-preset-image4" class="btn secondary">Preset: 3 Calls (12:20, 12:19, 12:18 PM)</button>
+          <button type="button" id="btn-call-preset-image1" class="btn secondary">Preset 1: Reference 1 (2 Calls)</button>
+          <button type="button" id="btn-call-preset-image2" class="btn secondary">Preset 2: Reference 2 (1 Call)</button>
+          <button type="button" id="btn-call-preset-image3" class="btn secondary">Preset 3: Reference 3 (3 Calls + Video)</button>
+          <button type="button" id="btn-call-reset-single" class="btn outline">Reset to 1 Layer (Minimum)</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>Export Call History</h3>
+        <div class="button-group">
+          <button type="button" id="btn-call-download" class="btn download-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Screenshot (1080×2340 HD)
+          </button>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p>💡 <strong>Interactive:</strong> Click directly on the phone number, country, date, or call duration on the phone screen to edit it in real-time!</p>
+      </div>
+    </div>
+
+    <!-- Call Logs Phone Mockup -->
+    <div class="phone-wrapper">
+      <div class="phone-screen call-phone-screen" id="call-phone-screen">
+        
+        <!-- Top Status Bar (Identical to Fake Text Status Bar) -->
+        <div class="status-bar" id="call-status-bar">
+          <div class="status-left">
+            <span class="status-time" id="call-status-time-val" contenteditable="true">8:08</span>
+            <span class="status-chat-icon" id="call-status-chat-icon">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+              </svg>
+            </span>
+          </div>
+          <div class="status-right">
+            <span class="net-speed"><span id="call-net-speed-val">4.88</span><br><span class="speed-unit">KB/S</span></span>
+            <div class="volte-badge">
+              <span class="volte-text">VoLTE</span>
+            </div>
+            <!-- Dual SIM Signal Bars -->
+            <div class="sim-signals">
+              <svg class="signal-icon" viewBox="0 0 16 14" width="15" height="13">
+                <rect x="1" y="10" width="2" height="3" fill="#ffffff" rx="0.5"/>
+                <rect x="4.5" y="7.5" width="2" height="5.5" fill="#ffffff" rx="0.5"/>
+                <rect x="8" y="5" width="2" height="8" fill="#ffffff" rx="0.5"/>
+                <rect x="11.5" y="2" width="2" height="11" fill="#ffffff" rx="0.5"/>
+              </svg>
+              <span class="sim-sub">2</span>
+              <svg class="signal-icon" viewBox="0 0 16 14" width="15" height="13">
+                <rect x="1" y="10" width="2" height="3" fill="#ffffff" rx="0.5"/>
+                <rect x="4.5" y="7.5" width="2" height="5.5" fill="#ffffff" rx="0.5"/>
+                <rect x="8" y="5" width="2" height="8" fill="#ffffff" rx="0.5"/>
+                <rect x="11.5" y="2" width="2" height="11" fill="#ffffff" rx="0.5"/>
+              </svg>
+            </div>
+            <!-- WiFi Icon -->
+            <svg class="wifi-icon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+              <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.67 0 7.02 1.34 9.61 3.56L12 18.23 2.39 11.06C4.98 8.84 8.33 7.5 12 7.5z"/>
+            </svg>
+            <!-- Battery Indicator -->
+            <div class="battery-pill" id="call-battery-pill">
+              <span class="battery-val" id="call-battery-val" contenteditable="true">21</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Phone Call History Header -->
+        <div class="call-header">
+          <div class="call-header-left">
+            <button class="icon-btn back-btn" aria-label="Back">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <div class="call-avatar-circle" id="call-avatar-circle" title="Contact Avatar">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="#c4c7c5">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div class="call-contact-info">
+              <span class="call-contact-name" id="call-phone-val" contenteditable="true">+63 956 825 5857</span>
+              <span class="call-contact-sub" id="call-location-val" contenteditable="true">Philippines</span>
+            </div>
+          </div>
+          <div class="call-header-right">
+            <button class="icon-btn add-contact-btn" aria-label="Add contact" title="Add contact">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </button>
+            <button class="icon-btn menu-btn" aria-label="More options">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Call Body Area -->
+        <div class="call-body" id="call-body">
+          <!-- Populated with Today / Older sections and call cards -->
+        </div>
+
+        <!-- Bottom Floating Action Bar -->
+        <div class="call-bottom-bar">
+          <!-- Green Pill Call Button -->
+          <button class="call-btn-pill" id="call-dial-btn" aria-label="Call">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#062111">
+              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-2.2 2.2a15.053 15.053 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.01A11.36 11.36 0 0 1 8.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-1-.99-1.12z"/>
+            </svg>
+          </button>
+
+          <!-- Right Action Buttons (Video Call & Message) -->
+          <div class="call-secondary-actions">
+            <!-- Video Call Action -->
+            <div class="action-item" id="call-video-action-item">
+              <button class="circle-action-btn video-call-btn" aria-label="Video call">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#e3e3e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+              </button>
+              <span class="action-item-label">Video call</span>
+            </div>
+
+            <!-- Message Action -->
+            <div class="action-item" id="call-message-action-item">
+              <button class="circle-action-btn message-btn" aria-label="Message">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e3e3e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+              </button>
+              <span class="action-item-label">Message</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Android 3-Button Navigation Bar (Hidden by default to match modern gesture UI) -->
+        <div class="android-nav-bar" id="call-android-nav-bar" style="display: none;">
+          <button class="nav-key recents-key" aria-label="Recent apps">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="7" x2="20" y2="7"/>
+              <line x1="4" y1="12" x2="20" y2="12"/>
+              <line x1="4" y1="17" x2="20" y2="17"/>
+            </svg>
+          </button>
+          <button class="nav-key home-key" aria-label="Home">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="8"/>
+            </svg>
+          </button>
+          <button class="nav-key back-key" aria-label="Back">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 6L8 12L14 18"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </main>
+
+  <!-- Android Scroll Wheel Time Picker Modal (1-12 Hours & 00-59 Minutes, with optional AM/PM) -->
+  <div id="wheel-time-modal" class="wheel-time-modal" style="display: none;">
+    <div class="wheel-time-card">
+      <div class="wheel-time-title" id="wheel-time-title">Select Time (1-12 Hours)</div>
+      <div class="wheel-columns-container">
+        <div class="wheel-selection-indicator"></div>
+        <!-- Hours Column (1-12) -->
+        <div class="wheel-column" id="wheel-hours-col"></div>
+        <div class="wheel-colon">:</div>
+        <!-- Minutes Column (00-59) -->
+        <div class="wheel-column" id="wheel-minutes-col"></div>
+        <!-- AM/PM Column (1-12 Hours AM/PM Option) -->
+        <div class="wheel-column wheel-ampm-col" id="wheel-ampm-col" style="display: none;"></div>
+      </div>
+      <div class="wheel-btn-row">
+        <button type="button" class="btn secondary" id="btn-wheel-cancel">Cancel</button>
+        <button type="button" class="btn primary" id="btn-wheel-set">Set Time</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call Layer Edit Modal (Duration & Details) -->
+  <div id="call-edit-modal" class="call-edit-modal" style="display: none;">
+    <div class="call-edit-card">
+      <h3>✏️ Edit Call Details</h3>
+      <label>
+        Call Duration (e.g. 3m 44s, or leave empty)
+        <input type="text" id="modal-edit-call-duration" placeholder="e.g. 3m 44s or 45s">
+        <div class="quick-duration-chips">
+          <span class="quick-duration-chip" data-val="">None (Empty)</span>
+          <span class="quick-duration-chip" data-val="30s">30s</span>
+          <span class="quick-duration-chip" data-val="1m 20s">1m 20s</span>
+          <span class="quick-duration-chip" data-val="3m 44s">3m 44s</span>
+          <span class="quick-duration-chip" data-val="12m">12m</span>
+        </div>
+      </label>
+      <label>
+        Call Time
+        <input type="text" id="modal-edit-call-time" placeholder="e.g. 12:20 PM">
+      </label>
+      <label>
+        Call Type / Direction
+        <select id="modal-edit-call-type">
+          <option value="outgoing">Outgoing call (↗)</option>
+          <option value="incoming">Incoming call (↙)</option>
+          <option value="missed">Missed call (↙ Red)</option>
+          <option value="cancelled">Cancelled call (✕)</option>
+        </select>
+      </label>
+      <div class="call-edit-btn-row">
+        <button type="button" class="btn secondary" id="btn-modal-cancel-call">Cancel</button>
+        <button type="button" class="btn primary" id="btn-modal-save-call">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Duration Error Pop-up -->
+  <div id="duration-error-popup" class="duration-error-popup" style="display: none;">
+    <div class="popup-error-icon">⚠️</div>
+    <div class="popup-error-body">
+      <div class="popup-error-title">Invalid Duration Input</div>
+      <div class="popup-error-desc">Letters and special characters are not allowed. Please enter numbers (seconds like <code>32</code> or <code>60</code>) or format like <code>1m 1s</code>.</div>
+    </div>
+    <button type="button" class="popup-error-close" id="btn-close-duration-popup" aria-label="Close">&times;</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="javascript/script.js"></script>
+</body>
+</html>

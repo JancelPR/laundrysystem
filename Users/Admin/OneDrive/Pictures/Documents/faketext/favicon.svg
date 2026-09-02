@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="innerBubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0f4f8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Modern Rounded Squircle Base -->
+  <rect x="3" y="3" width="58" height="58" rx="16" fill="url(#brandGrad)"/>
+
+  <!-- Minimalist Chat Bubble -->
+  <path d="M21 17h22c5.523 0 10 4.477 10 10v3c0 5.523-4.477 10-10 10H28.5L20 46.5V40c-4.97 0-9-4.03-9-9v-4c0-5.523 4.477-10 10-10z" fill="url(#innerBubbleGrad)"/>
+
+  <!-- Clean Minimalist Audio/Text Voice Bars -->
+  <rect x="23" y="27" width="3" height="7" rx="1.5" fill="#6366f1"/>
+  <rect x="29" y="24" width="3" height="13" rx="1.5" fill="#3b82f6"/>
+  <rect x="35" y="26" width="3" height="9" rx="1.5" fill="#0284c7"/>
+  <rect x="41" y="28" width="3" height="5" rx="1.5" fill="#0ea5e9"/>
+</svg>
